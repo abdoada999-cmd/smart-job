@@ -1,0 +1,2433 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Smart Job Platform</title>
+<script>
+  (function(){
+    try{
+      var t=localStorage.getItem('smart_job_theme_v1');
+      if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
+      document.documentElement.setAttribute('data-theme',t);
+    }catch(e){}
+  })();
+</script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
+    :root {
+      --primary: #1379d1;
+      --primary-dark: #075bab;
+      --navy: #071b35;
+      --navy-2: #0c294b;
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #172235;
+      --muted: #7d899a;
+      --border: #e7ecf2;
+      --green: #26b46a;
+      --orange: #f59d28;
+      --purple: #9670d7;
+      --red: #ef6262;
+      --shadow: 0 8px 24px rgba(27, 57, 91, .07);
+      --input-bg: #fbfcfe;
+      --topbar-bg: #ffffff;
+      --hover-bg: #eef4fb;
+      --table-head: #f8fafc;
+      --mini-stat-bg: #f7faff;
+      --mini-stat-border: #edf2f8;
+      --tag-bg: #edf4fa;
+      --tag-color: #4d6b88;
+      --chip-bg: #eef4ff;
+      --answer-bg: #fbfcfe;
+      --forecast-bg: linear-gradient(135deg, #eef8ff, #f4fbff);
+      --forecast-border: #cceafa;
+      --progress-track: #e9edf6;
+      --circle-inner: #ffffff;
+      --logo-bg: #eaf4ff;
+      --secondary-bg: #edf6ff;
+      --admin-info-bg: #eef5ff;
+      --status-ok-bg: #e6f7ee;
+      --status-ok-color: #16864d;
+      --status-pending-bg: #fff5dc;
+      --status-pending-color: #a26a08;
+      --hero-text: #e7f5ff;
+    }
+
+    html[data-theme="dark"] {
+      --primary: #4aa3ea;
+      --primary-dark: #2b8ad6;
+      --navy: #e8eef6;
+      --navy-2: #d7e3f0;
+      --bg: #07111d;
+      --card: #0e1c2d;
+      --text: #e8eef6;
+      --muted: #93a4b8;
+      --border: #1e334b;
+      --green: #3dce7d;
+      --orange: #f6b04a;
+      --purple: #b08eec;
+      --red: #f07a7a;
+      --shadow: 0 10px 28px rgba(0, 0, 0, .28);
+      --input-bg: #0b1726;
+      --topbar-bg: #0b1828;
+      --hover-bg: #13263b;
+      --table-head: #102033;
+      --mini-stat-bg: #102033;
+      --mini-stat-border: #1e334b;
+      --tag-bg: #16314a;
+      --tag-color: #b7d4ee;
+      --chip-bg: #16314a;
+      --answer-bg: #0b1726;
+      --forecast-bg: linear-gradient(135deg, #10283f, #0d2236);
+      --forecast-border: #214c66;
+      --progress-track: #1a2d42;
+      --circle-inner: #0e1c2d;
+      --logo-bg: #16314a;
+      --secondary-bg: #16314a;
+      --admin-info-bg: #13263b;
+      --status-ok-bg: #123526;
+      --status-ok-color: #6fe3a6;
+      --status-pending-bg: #3a2c12;
+      --status-pending-color: #f3c56a;
+      --hero-text: #d7ecfb;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      color-scheme: light;
+    }
+
+    body {
+      font-family: "Cairo", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background .25s ease, color .25s ease;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 255px;
+      background: linear-gradient(180deg, #071b35, #0b2849);
+      color: #fff;
+      padding: 22px 16px;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 20;
+      transition: .3s;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 34px;
+      padding: 0 8px;
+    }
+
+    .brand-logo {
+      width: 39px;
+      height: 39px;
+      background: linear-gradient(135deg, #29a8ff, #0b62c5);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+      box-shadow: 0 5px 15px rgba(37, 163, 255, .3);
+    }
+
+    .brand h1 {
+      font-size: 14px;
+      line-height: 1.3;
+      font-weight: 800;
+    }
+
+    .brand span {
+      display: block;
+      color: #91a6bf;
+      font-size: 10px;
+      font-weight: 400;
+    }
+
+    .nav-title {
+      color: #6f88a5;
+      font-size: 10px;
+      margin: 20px 12px 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: grid;
+      gap: 5px;
+    }
+
+    .nav-link {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 13px;
+      color: #b7c8dc;
+      border-radius: 7px;
+      background: transparent;
+      text-decoration: none;
+      font-size: 12px;
+      transition: .2s;
+      text-align: right;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: rgba(35, 137, 222, .24);
+      color: #fff;
+    }
+
+    .nav-link.active {
+      border-right: 3px solid #32a6f7;
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    /* Main */
+    .main {
+      width: calc(100% - 255px);
+      margin-right: 255px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 72px;
+      background: var(--topbar-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-right,
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .menu-btn {
+      background: none;
+      color: var(--navy);
+      font-size: 22px;
+      display: none;
+    }
+
+    .theme-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 9px;
+      background: var(--hover-bg);
+      color: var(--navy);
+      font-size: 18px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+    }
+
+    .theme-btn:hover {
+      background: var(--secondary-bg);
+    }
+
+    .welcome {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .welcome small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 400;
+    }
+
+    .top-icon {
+      position: relative;
+      color: #718096;
+      font-size: 20px;
+      background: transparent;
+    }
+
+    .notification-dot {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--red);
+      top: 1px;
+      right: 0;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e9d2b4, #805e45);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 18px;
+      border: 3px solid #edf2f7;
+    }
+
+    .profile strong {
+      font-size: 12px;
+    }
+
+    .profile small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .content {
+      padding: 28px 30px;
+    }
+
+    /* Page views */
+    .page {
+      display: none;
+      animation: fadeIn .25s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .page-heading h2 {
+      font-size: 22px;
+    }
+
+    .page-heading p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: #fff;
+      border-radius: 7px;
+      padding: 10px 18px;
+      font-size: 12px;
+      transition: .2s;
+    }
+
+    .primary-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .secondary-btn {
+      background: var(--secondary-bg);
+      color: var(--primary);
+      border-radius: 7px;
+      padding: 9px 16px;
+      font-size: 12px;
+    }
+
+    /* Dashboard */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .hero {
+      min-height: 185px;
+      border-radius: 10px;
+      padding: 27px 29px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(7, 99, 177, .96), rgba(28, 150, 221, .74)),
+        url("https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80") center/cover;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: -20px;
+      bottom: -55px;
+      width: 240px;
+      height: 150px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .1);
+    }
+
+    .hero h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p {
+      max-width: 440px;
+      color: var(--hero-text);
+      font-size: 12px;
+      line-height: 2;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero .primary-btn {
+      margin-top: 13px;
+      background: #fff;
+      color: var(--primary-dark);
+      position: relative;
+      z-index: 1;
+    }
+
+    .progress-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .progress-card h4 {
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .circle {
+      width: 88px;
+      height: 88px;
+      margin: auto;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--primary) 75%, #e8eef5 0);
+      position: relative;
+    }
+
+    .circle::before {
+      content: "";
+      position: absolute;
+      width: 68px;
+      height: 68px;
+      background: var(--circle-inner);
+      border-radius: 50%;
+    }
+
+    .circle strong {
+      position: relative;
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    .progress-card a {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--primary);
+      font-size: 11px;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 25px 0 13px;
+    }
+
+    .section-title h3 {
+      font-size: 15px;
+    }
+
+    .section-title a {
+      color: var(--primary);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px;
+    }
+
+    .service-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      min-height: 115px;
+      border-radius: 8px;
+      padding: 19px 13px;
+      text-align: center;
+      transition: .2s;
+      cursor: pointer;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .service-icon {
+      width: 43px;
+      height: 43px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 20px;
+    }
+
+    .service-card h4 {
+      font-size: 11px;
+    }
+
+    .service-card p {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 3px;
+    }
+
+    .blue { background: #3289da; }
+    .green { background: #39b873; }
+    .purple { background: #956bd5; }
+    .orange { background: #f49b24; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .card-header h3 {
+      font-size: 14px;
+    }
+
+    .card-header a {
+      font-size: 11px;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    .jobs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .jobs-table th {
+      color: var(--muted);
+      background: var(--table-head);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .jobs-table td,
+    .jobs-table th {
+      padding: 12px 9px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .job-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+    }
+
+    .job-company {
+      display: block;
+      font-size: 9px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .status {
+      border-radius: 20px;
+      padding: 4px 8px;
+      font-size: 9px;
+      color: var(--status-ok-color);
+      background: var(--status-ok-bg);
+      display: inline-block;
+    }
+
+    .status.pending {
+      color: var(--status-pending-color);
+      background: var(--status-pending-bg);
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .mini-stat {
+      padding: 15px;
+      border-radius: 8px;
+      background: var(--mini-stat-bg);
+      border: 1px solid var(--mini-stat-border);
+    }
+
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 22px;
+      color: var(--navy);
+      margin-top: 5px;
+    }
+
+    .mini-stat small {
+      color: var(--green);
+      font-size: 9px;
+    }
+
+    /* Forms and pages */
+    .form-card {
+      max-width: 850px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 12px;
+      background: var(--input-bg);
+      color: var(--text);
+      outline: none;
+      font-size: 12px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(19, 121, 209, .1);
+    }
+
+    textarea {
+      min-height: 115px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .jobs-list {
+      display: grid;
+      gap: 13px;
+    }
+
+    .job-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 18px;
+      border-radius: 9px;
+      box-shadow: var(--shadow);
+    }
+
+    .job-card-info {
+      display: flex;
+      gap: 13px;
+      align-items: center;
+    }
+
+    .company-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: var(--logo-bg);
+      color: var(--primary);
+      font-size: 22px;
+    }
+
+    .job-card h3 {
+      font-size: 14px;
+    }
+
+    .job-card p {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 7px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 3px 8px;
+      border-radius: 15px;
+      color: var(--tag-color);
+      background: var(--tag-bg);
+      font-size: 9px;
+    }
+
+    .simulator {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+    }
+
+    .skill-box {
+      min-height: 310px;
+      background: #102d4d;
+      border-radius: 12px;
+      color: #fff;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-box::before {
+      content: "⚙";
+      position: absolute;
+      left: 25px;
+      bottom: -30px;
+      font-size: 170px;
+      color: rgba(255,255,255,.06);
+    }
+
+    .skill-box h2 {
+      font-size: 21px;
+      margin-bottom: 10px;
+    }
+
+    .skill-box p {
+      color: #bdd0e2;
+      font-size: 12px;
+      line-height: 2;
+      max-width: 480px;
+    }
+
+    .skill-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .skill-option {
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.18);
+      padding: 10px 14px;
+      border-radius: 7px;
+      font-size: 11px;
+    }
+
+    .skill-option:hover,
+    .skill-option.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .score-card {
+      text-align: center;
+    }
+
+    .score-card h3 {
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .score {
+      width: 140px;
+      height: 140px;
+      margin: auto;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--green) 82%, #e5edf3 0);
+      position: relative;
+    }
+
+    .score::before {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      background: var(--circle-inner);
+      border-radius: 50%;
+    }
+
+    .score strong {
+      position: relative;
+      font-size: 30px;
+      color: var(--green);
+    }
+
+    .score-card p {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 17px;
+    }
+
+    .forecast-card {
+      background: var(--forecast-bg);
+      border: 1px solid var(--forecast-border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .forecast-card h3 {
+      color: var(--primary-dark);
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .forecast-card p {
+      font-size: 12px;
+      line-height: 2;
+    }
+
+    .forecast-value {
+      color: var(--orange);
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .metric {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--primary);
+      font-size: 24px;
+      margin-top: 6px;
+    }
+
+    .notification {
+      position: fixed;
+      left: 25px;
+      bottom: 25px;
+      background: #122945;
+      color: #fff;
+      border-radius: 8px;
+      padding: 13px 18px;
+      font-size: 12px;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: .3s;
+      z-index: 50;
+    }
+
+    .notification.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px) {
+      .service-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .dashboard-grid,
+      .simulator {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 800px) {
+      .sidebar {
+        transform: translateX(100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        width: 100%;
+        margin-right: 0;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .topbar {
+        padding: 0 16px;
+      }
+
+      .content {
+        padding: 20px 15px;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .job-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .profile strong,
+      .profile small {
+        display: none;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .service-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .service-card {
+        min-height: 100px;
+        padding: 13px 5px;
+      }
+
+      .jobs-table {
+        font-size: 9px;
+      }
+
+      .jobs-table td,
+      .jobs-table th {
+        padding: 8px 4px;
+      }
+
+      .welcome {
+        font-size: 12px;
+      }
+
+      .topbar-left {
+        gap: 9px;
+      }
+    }
+  
+/* merged data layer */
+.answer{display:block;width:100%;text-align:right;padding:12px;margin-top:8px;border:1px solid var(--border);border-radius:7px;background:var(--answer-bg);color:var(--text);font-size:12px}.answer:hover{border-color:var(--primary)}.role-btn{font-size:11px;padding:10px 6px}.role-btn.active{background:var(--primary);color:#fff}.job-empty{grid-column:1/-1}.chip{display:inline-block;padding:4px 9px;border-radius:20px;background:var(--chip-bg);color:var(--primary);font-size:10px;font-weight:700}.company-panel{display:grid;grid-template-columns:1fr 1fr;gap:12px}.message-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}.message-row:last-child{border-bottom:0}.msg-avatar{width:42px;height:42px;border-radius:50%;background:var(--logo-bg);display:grid;place-items:center;font-size:19px;flex-shrink:0}@media(max-width:800px){.company-panel{grid-template-columns:1fr}}
+
+.answer{display:block;width:100%;text-align:right;padding:12px 14px;margin:8px 0;border:1px solid var(--border);border-radius:9px;background:var(--answer-bg);color:var(--text);font-size:12px;font-weight:700;transition:.15s}.answer:hover{border-color:var(--primary);background:var(--hover-bg)}.answer:disabled{cursor:default;opacity:.98}.candidate-card{padding:15px;border:1px solid var(--border);border-radius:10px;margin-bottom:10px;background:var(--card)}.candidate-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.candidate-meta{font-size:11px;color:var(--muted);line-height:1.8;margin-top:5px}.status.accepted{color:var(--status-ok-color);background:var(--status-ok-bg)}.status.rejected{color:#f3a0a4;background:#3a1a1d}.app-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.hidden{display:none!important}
+
+
+/* ===== Responsive / movable sidebar ===== */
+.sidebar{height:100vh;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;overscroll-behavior:contain;box-sizing:border-box}
+.sidebar::-webkit-scrollbar{width:5px}.sidebar::-webkit-scrollbar-thumb{background:#29486a;border-radius:20px}
+.sidebar,.main{transition:width .28s ease,margin-right .28s ease,transform .28s ease}
+@media (min-width:801px){
+  .menu-btn{display:block!important;width:42px;height:42px;border-radius:9px;transition:.2s}
+  .menu-btn:hover{background:var(--hover-bg)}
+  .sidebar.collapsed{width:82px;padding-left:10px;padding-right:10px}
+  .main.sidebar-collapsed{width:calc(100% - 82px);margin-right:82px}
+  .sidebar.collapsed .brand{justify-content:center;padding:0;margin-bottom:30px}
+  .sidebar.collapsed .brand h1,.sidebar.collapsed .nav-title,.sidebar.collapsed .nav-link:not(.highlight)::after,.sidebar.collapsed .logout{font-size:0}
+  .sidebar.collapsed .brand-logo{flex-shrink:0}
+  .sidebar.collapsed .nav-link{justify-content:center;padding:12px 8px;gap:0}
+  .sidebar.collapsed .nav-icon{font-size:19px;width:auto}
+  .sidebar.collapsed .nav-link.highlight{font-size:0}
+  .sidebar.collapsed .nav-link.highlight .nav-icon{font-size:19px}
+  .sidebar.collapsed .nav-link{position:relative}
+  .sidebar.collapsed .nav-link:hover::before{content:attr(data-label);position:absolute;right:65px;white-space:nowrap;background:#071b35;color:#fff;padding:7px 10px;border-radius:7px;font-size:11px;z-index:99;box-shadow:0 6px 18px #0003}
+}
+@media (max-width:800px){
+  .sidebar{width:280px;max-width:86vw;transform:translateX(100%);box-shadow:-12px 0 35px #0003}
+  .sidebar.open{transform:translateX(0)}
+  .main,.main.sidebar-collapsed{width:100%;margin-right:0}
+  .menu-btn{display:block!important;width:42px;height:42px;border-radius:9px}
+  body.sidebar-open::before{content:"";position:fixed;inset:0;background:#06162b80;z-index:19}
+  .sidebar{z-index:20}
+}
+
+
+
+.admin-only{display:none}.admin-only.show-admin{display:grid}
+.admin-only-page{display:none}
+.page.active{display:block!important}
+.admin-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;background:var(--chip-bg);color:var(--primary);font-size:10px;font-weight:800}
+.admin-card{border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:10px;background:var(--card)}.admin-card h4{font-size:14px;margin-bottom:7px}.admin-card p{font-size:11px;color:var(--muted);line-height:1.9}.unread-ad{border-right:4px solid var(--primary)}
+.admin-welcome{display:none;margin-bottom:20px;background:linear-gradient(135deg,#071b35,#123b69);color:#fff;border-radius:18px;padding:22px;box-shadow:0 12px 30px #071b3520;position:relative;overflow:hidden}
+.admin-welcome.show{display:block}.admin-welcome:after{content:'⚙️';position:absolute;left:-15px;bottom:-28px;font-size:110px;opacity:.07;transform:rotate(-15deg)}
+.admin-welcome-top{display:flex;align-items:center;justify-content:space-between;gap:15px}.admin-welcome h2{font-size:21px;margin:0 0 6px}.admin-welcome p{font-size:12px;color:#d9e4f5;line-height:1.8;margin:0}.owner-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.owner-info{background:#ffffff12;border:1px solid #ffffff1f;border-radius:12px;padding:12px}.owner-info span{display:block;color:#b9c9df;font-size:10px;margin-bottom:4px}.owner-info strong{font-size:13px}.owner-info a{color:#fff}.admin-dashboard-badge{background:#fff;color:#123b69;border-radius:20px;padding:6px 10px;font-size:10px;font-weight:800;white-space:nowrap}
+.admin-count{margin-right:auto;min-width:20px;height:20px;padding:0 6px;border-radius:20px;background:#e5484d;color:#fff;display:none;align-items:center;justify-content:center;font-size:10px;font-weight:800}.admin-count.show{display:inline-flex}.admin-owner-card{margin-top:15px;background:linear-gradient(135deg,#ffffff18,#ffffff0a);border:1px solid #ffffff26;border-radius:14px;padding:15px}.admin-owner-card .owner-title{font-size:12px;font-weight:800;margin-bottom:10px}.admin-owner-lines{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.admin-owner-line{background:#ffffff0d;border-radius:10px;padding:10px}.admin-owner-line span{display:block;color:#b9c9df;font-size:9px;margin-bottom:4px}.admin-owner-line strong,.admin-owner-line a{font-size:12px;color:#fff}.admin-owner-line a{text-decoration:none}@media(max-width:800px){.admin-owner-lines{grid-template-columns:1fr}}
+@media(max-width:800px){.owner-grid{grid-template-columns:1fr}.admin-welcome-top{align-items:flex-start;flex-direction:column}}
+
+.progress{height:8px;background:var(--progress-track);border-radius:20px;overflow:hidden;margin-top:8px}
+.progress span{display:block;height:100%;background:var(--primary);border-radius:20px}
+.result{padding:12px 0;border-bottom:1px solid var(--border)}
+.result:last-child{border-bottom:0}
+.small-btn{background:var(--primary);color:#fff;border-radius:7px;padding:8px 12px;font-size:11px}
+.small-btn.gray{background:var(--hover-bg);color:var(--text)}
+.panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.panel-grid{grid-template-columns:1fr}}
+html[data-theme="dark"] .hero{background:linear-gradient(90deg, rgba(6, 22, 40, .96), rgba(12, 70, 112, .78)), url("https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80") center/cover}
+html[data-theme="dark"] .hero .primary-btn{background:#e8f3ff;color:#0b2948}
+html[data-theme="dark"] .avatar{border-color:#1e334b}
+html[data-theme="dark"] #adminLoginInfo{background:var(--admin-info-bg)!important;color:var(--text)}
+html[data-theme="dark"] .circle{background:conic-gradient(var(--primary) 75%, #1a2d42 0)}
+html[data-theme="dark"] .score{background:conic-gradient(var(--green) 82%, #1a2d42 0)}
+html[data-theme="dark"] option{background:var(--card);color:var(--text)}
+html[data-theme="dark"] .notification{background:#07111d;border:1px solid var(--border)}
+.theme-switch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--input-bg)}
+.theme-switch strong{display:block;font-size:13px}
+.theme-switch span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.company-ad-banner{display:grid;grid-template-columns:1.6fr .8fr;gap:16px;background:linear-gradient(135deg,#0d3b6b,#1379d1);color:#fff;border-radius:14px;padding:22px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+.company-ad-copy h3{font-size:18px;margin:8px 0 8px}
+.company-ad-copy p{font-size:12px;line-height:1.9;color:#e7f5ff;max-width:520px}
+.company-ad-badge{display:inline-block;background:#ffffff22;border:1px solid #ffffff33;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800}
+.company-ad-meta{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;font-size:12px}
+.company-ad-meta span{background:#ffffff18;border-radius:8px;padding:7px 10px}
+.company-ad-actions{display:flex;flex-wrap:wrap;gap:8px}
+.company-ad-actions .primary-btn{background:#fff;color:#075bab}
+.company-ad-actions .secondary-btn{background:#ffffff22;color:#fff}
+.company-ad-side{background:#ffffff14;border:1px solid #ffffff22;border-radius:12px;padding:18px;display:grid;align-content:center}
+.company-ad-side strong{font-size:15px;margin-bottom:8px}
+.company-ad-side p{font-size:12px;color:#e7f5ff;line-height:1.9}
+@media(max-width:800px){.company-ad-banner{grid-template-columns:1fr}}
+.messenger{display:grid;grid-template-columns:280px 1fr;gap:14px}
+.messenger-head{font-weight:800;font-size:14px;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px}
+.messenger-body{min-height:280px;max-height:360px;overflow:auto;display:grid;gap:8px;align-content:start}
+.chat-bubble{max-width:80%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.7}
+.chat-bubble.me{margin-right:auto;background:var(--primary);color:#fff}
+.chat-bubble.them{margin-left:auto;background:var(--hover-bg);color:var(--text)}
+.chat-bubble small{display:block;opacity:.75;font-size:9px;margin-top:4px}
+.messenger-compose{display:flex;gap:8px;margin-top:12px}
+.thread-item{padding:10px;border:1px solid var(--border);border-radius:9px;margin-bottom:8px;cursor:pointer;background:var(--input-bg)}
+.thread-item.active{border-color:var(--primary);background:var(--secondary-bg)}
+.thread-item strong{display:block;font-size:12px}
+.thread-item span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+@media(max-width:800px){.messenger{grid-template-columns:1fr}}
+.admin-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.admin-kpi{text-align:right;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow);color:inherit}
+.admin-kpi span{display:block;color:var(--muted);font-size:11px}
+.admin-kpi strong{display:block;font-size:26px;margin:6px 0 4px;color:var(--primary)}
+.admin-kpi small{color:var(--muted);font-size:10px}
+.admin-charts{display:grid;grid-template-columns:1.1fr 1fr;gap:16px}
+.donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center;padding:8px 0}
+.donut-legend{display:grid;gap:8px;font-size:12px}
+.legend-row{display:flex;align-items:center;gap:8px}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.bar-chart{display:grid;gap:10px}
+.bar-row{display:grid;grid-template-columns:110px 1fr 36px;gap:8px;align-items:center;font-size:11px}
+.bar-track{height:10px;background:var(--progress-track);border-radius:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:20px}
+.week-chart{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;min-height:160px;padding-top:10px}
+.week-col{display:grid;justify-items:center;gap:6px}
+.week-bar{width:100%;max-width:28px;background:linear-gradient(180deg,var(--primary),#075bab);border-radius:8px 8px 3px 3px;min-height:4px}
+.week-col span{font-size:10px;color:var(--muted)}
+.week-col b{font-size:11px}
+@media(max-width:900px){.admin-kpi-grid,.admin-charts{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.admin-kpi-grid,.admin-charts{grid-template-columns:1fr}.bar-row{grid-template-columns:1fr}}
+
+/* ===== Visual polish only — no feature changes ===== */
+body{
+  background:
+    radial-gradient(1200px 400px at 100% -10%, rgba(19,121,209,.08), transparent 55%),
+    radial-gradient(900px 380px at -10% 110%, rgba(38,180,106,.06), transparent 50%),
+    var(--bg);
+  letter-spacing: .1px;
+}
+html[data-theme="dark"] body{
+  background:
+    radial-gradient(1000px 420px at 100% -20%, rgba(74,163,234,.12), transparent 50%),
+    radial-gradient(800px 360px at 0% 100%, rgba(7,27,53,.8), transparent 55%),
+    var(--bg);
+}
+.sidebar{
+  background: linear-gradient(180deg,#07182f 0%,#0a2748 55%,#071b35 100%);
+  box-shadow: -8px 0 30px rgba(7,27,53,.18);
+}
+.brand-logo{
+  width:42px;height:42px;border-radius:14px;
+  background:linear-gradient(135deg,#49b6ff,#0b62c5);
+}
+.brand h1{letter-spacing:.2px}
+.nav-link{
+  border-radius:12px;
+  padding:12px 14px;
+  font-weight:600;
+}
+.nav-link.active{
+  background:linear-gradient(90deg,rgba(50,166,247,.28),rgba(50,166,247,.08));
+  box-shadow:inset -3px 0 0 #32a6f7;
+}
+.topbar{
+  height:76px;
+  background:color-mix(in srgb, var(--topbar-bg) 92%, transparent);
+  backdrop-filter:blur(14px);
+  box-shadow:0 1px 0 var(--border);
+}
+.welcome{font-size:15px}
+.content{padding:30px 32px 40px}
+.card,.form-card,.job-card,.candidate-card,.admin-card,.progress-card,.service-card{
+  border-radius:16px;
+}
+.card,.job-card,.candidate-card,.admin-card,.progress-card{
+  box-shadow:0 10px 30px rgba(16,39,68,.06);
+}
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .job-card,
+html[data-theme="dark"] .candidate-card,
+html[data-theme="dark"] .admin-card,
+html[data-theme="dark"] .progress-card{
+  box-shadow:0 12px 32px rgba(0,0,0,.22);
+}
+.service-card{
+  min-height:128px;
+  border-radius:16px;
+  padding:22px 14px;
+}
+.service-card:hover{
+  transform:translateY(-5px);
+  border-color:color-mix(in srgb,var(--primary) 35%, var(--border));
+}
+.service-icon{
+  width:48px;height:48px;font-size:21px;
+  box-shadow:0 8px 16px rgba(0,0,0,.12);
+}
+.page-heading h2{font-size:24px;letter-spacing:.2px}
+.page-heading p{font-size:13px;line-height:1.8}
+.primary-btn,.secondary-btn,.small-btn{
+  border-radius:10px;
+  font-weight:700;
+  letter-spacing:.2px;
+}
+.primary-btn{
+  padding:11px 18px;
+  box-shadow:0 8px 18px rgba(19,121,209,.22);
+}
+.primary-btn:hover{transform:translateY(-1px)}
+input,select,textarea{
+  border-radius:12px;
+  padding:13px 14px;
+  background:var(--input-bg);
+}
+.hero{
+  min-height:200px;
+  border-radius:18px;
+  padding:32px;
+}
+.hero h2{font-size:26px}
+.circle,.score{box-shadow:0 8px 20px rgba(19,121,209,.12)}
+.admin-kpi,.admin-card,.candidate-card{
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.admin-kpi:hover,.candidate-card:hover{
+  transform:translateY(-2px);
+}
+.messenger-body{
+  background:linear-gradient(180deg,transparent,rgba(19,121,209,.04));
+  border-radius:12px;
+  padding:8px;
+}
+.chat-bubble{box-shadow:0 4px 12px rgba(0,0,0,.06)}
+#authModal .card{
+  border-radius:22px;
+  padding:30px 26px !important;
+  box-shadow:0 24px 60px rgba(0,0,0,.28);
+}
+.notification{
+  border-radius:12px;
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
+}
+.theme-btn{
+  border-radius:12px;
+}
+.passport-doc{border:1px solid var(--border);border-radius:20px;overflow:hidden;background:var(--card);box-shadow:var(--shadow)}
+.passport-top{display:flex;justify-content:space-between;gap:16px;padding:22px;background:linear-gradient(135deg,#071b35,#1379d1);color:#fff}
+.passport-top h3{font-size:20px;margin:4px 0}
+.passport-top p{font-size:12px;color:#d7e8f8;line-height:1.8}
+.passport-id{background:#ffffff1f;border:1px solid #ffffff33;border-radius:12px;padding:12px 14px;min-width:140px;text-align:center}
+.passport-id b{display:block;font-size:18px;margin-top:4px}
+.passport-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;padding:18px}
+.passport-box{border:1px solid var(--border);border-radius:14px;padding:14px;background:var(--input-bg)}
+.passport-box h4{font-size:13px;margin-bottom:8px}
+.passport-box p,.passport-box li{font-size:12px;line-height:1.9;color:var(--muted)}
+.skill-chip{display:inline-block;margin:0 0 6px 6px;padding:5px 10px;border-radius:999px;background:var(--chip-bg);color:var(--primary);font-size:11px;font-weight:700}
+.passport-meter{height:9px;background:var(--progress-track);border-radius:20px;overflow:hidden;margin-top:8px}
+.passport-meter span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),#26b46a)}
+.work-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}
+.work-item:last-child{border-bottom:0}
+.insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 16px}
+.insight-card{border:1px solid var(--border);border-radius:16px;padding:16px;background:var(--card);box-shadow:var(--shadow)}
+.insight-card.warn{border-color:#f6b04a55;background:linear-gradient(180deg,rgba(246,176,74,.12),var(--card))}
+.insight-card.ok{border-color:#3dce7d44}
+.insight-card span{display:block;color:var(--muted);font-size:11px}
+.insight-card strong{display:block;margin:6px 0 4px;font-size:15px}
+.insight-card p{font-size:12px;line-height:1.8;color:var(--muted)}
+.shortage-hint{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.8}
+.dev-box{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dev-col{border:1px solid var(--border);border-radius:14px;padding:14px;background:var(--card)}
+.dev-col h4{margin-bottom:8px;font-size:13px}
+@media(max-width:900px){.insight-grid,.dev-box{grid-template-columns:1fr}}
+@media(max-width:800px){.passport-grid,.passport-top{grid-template-columns:1fr;flex-direction:column}}
+
+</style></head><body><div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-logo">⚙</div><h1>Smart Job<br>Platform <span>منصة التوظيف الذكية</span></h1></div>
+    <div class="nav-title">القائمة الرئيسية</div>
+    <ul class="nav-list">
+      <li><a class="nav-link active" href="#" data-page="dashboard" data-label="الرئيسية"><span class="nav-icon">⌂</span>الرئيسية</a></li>
+      <li><a class="nav-link" href="#" data-page="profile" data-label="الملف الشخصي"><span class="nav-icon">♙</span>الملف الشخصي</a></li>
+      <li class="hide-for-admin"><a class="nav-link" href="#" data-page="passport" data-label="جواز المهارة"><span class="nav-icon">🛂</span>جواز المهارة</a></li>
+      <li class="hide-for-admin hide-for-company"><a class="nav-link" href="#" data-page="jobs" data-label="البحث عن وظيفة"><span class="nav-icon">⌕</span><span id="jobsNavText">البحث عن وظيفة</span></a></li>
+      <li class="hide-for-admin"><a class="nav-link" href="#" data-page="applications" data-label="طلبات التوظيف"><span class="nav-icon">▣</span>طلبات التوظيف</a></li>
+      <li class="hide-for-admin hide-for-company"><a class="nav-link" href="#" data-page="simulator" data-label="اختبار المهارات"><span class="nav-icon">▥</span>اختبار المهارات</a></li>
+      <li class="hide-for-admin hide-for-company"><a class="nav-link" href="#" data-page="results" data-label="نتائج التقييم"><span class="nav-icon">📊</span>نتائج التقييم</a></li>
+      <li class="hide-for-admin hide-for-company"><a class="nav-link" href="#" data-page="ai" data-label="التقييم بالذكاء الاصطناعي"><span class="nav-icon">🧠</span>التقييم بالذكاء الاصطناعي</a></li>
+      <li class="hide-for-admin"><a class="nav-link highlight" href="#" data-page="announce" data-label="اعلان هنا"><span class="nav-icon">📣</span>اعلان هنا</a></li>
+      <li class="hide-for-admin"><a class="nav-link" href="#" data-page="companies" data-label="الشركات"><span class="nav-icon">▤</span>الشركات</a></li>
+    </ul>
+    <div class="nav-title admin-only" id="adminSectionTitle">إدارة الموقع</div>
+    <ul class="nav-list admin-only" id="adminNav">
+      <li><a class="nav-link" href="#" data-page="adminWorkers" data-label="الموظفين"><span class="nav-icon">👷</span><span>الموظفين</span><b class="admin-count" id="workerCountBadge">0</b></a></li>
+      <li><a class="nav-link" href="#" data-page="adminCompanies" data-label="الشركات المضافة"><span class="nav-icon">🏢</span><span>الشركات المضافة</span><b class="admin-count" id="companyCountBadge">0</b></a></li>
+      <li><a class="nav-link" href="#" data-page="adRequests" data-label="إعلانات التواصل"><span class="nav-icon">📣</span><span>إعلانات التواصل</span><b class="admin-count" id="adCountBadge">0</b></a></li>
+    </ul>
+    <div class="nav-title">الحساب</div>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="#" data-page="notifications" data-label="الإشعارات"><span class="nav-icon">♢</span>الإشعارات</a></li>
+      <li><a class="nav-link" href="#" data-page="messages" data-label="المراسل"><span class="nav-icon">💬</span>المراسل</a></li>
+      <li><a class="nav-link" href="#" data-page="settings" data-label="الإعدادات"><span class="nav-icon">⚙</span>الإعدادات</a></li>
+      <li><a class="nav-link" href="#" id="logoutBtn"><span class="nav-icon">⇥</span>تسجيل الخروج</a></li>
+    </ul>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-right"><button class="menu-btn" id="menuBtn">☰</button><div class="welcome" id="topWelcome">مرحباً 👋<small>ابدأ بتسجيل الدخول لاستخدام المنصة</small></div></div>
+      <div class="topbar-left"><button class="theme-btn" id="themeToggle" type="button" title="الوضع الليلي">🌙</button><button class="top-icon" id="notificationBtn">♧<span class="notification-dot" id="notificationDot"></span></button><div class="profile" id="avatarBtn"><div class="avatar" id="topAvatar">👷</div><div><strong id="topName">زائر</strong><small id="topRole">غير مسجل</small></div></div></div>
+    </header>
+    <section class="content">
+
+      <div class="page active" id="dashboard">
+        <div class="admin-welcome" id="adminWelcome">
+          <div class="admin-welcome-top">
+            <div><h2>أهلاً وسهلاً بك يا صاحب الموقع 👋</h2><p>مرحباً بك في لوحة إدارة <strong>Smart Job Platform</strong>، يمكنك من هنا متابعة الحسابات المسجلة والإعلانات وطلبات التواصل الواردة.</p></div>
+            <span class="admin-dashboard-badge">🛡️ حساب صاحب الموقع</span>
+          </div>
+          <div class="admin-owner-card">
+            <div class="owner-title">👤 بيانات صاحب الموقع</div>
+            <div class="admin-owner-lines">
+              <div class="admin-owner-line"><span>الاسم</span><strong>جنة هيثم جمعة</strong></div>
+              <div class="admin-owner-line"><span>المحافظة</span><strong>كفر الشيخ 🇪🇬</strong></div>
+              <div class="admin-owner-line"><span>رقم الهاتف</span><a href="tel:01154093079" dir="ltr">01154093079</a></div>
+            </div>
+          </div>
+        </div>
+        <div id="adminAnalytics" class="hidden">
+          <div class="section-title"><h3>لوحة تحليل المنصة</h3><a data-page="adminWorkers">تفاصيل الحسابات</a></div>
+          <div class="admin-kpi-grid">
+            <button class="admin-kpi" data-page="adminWorkers"><span>👷 العمال المسجلون</span><strong id="kpiWorkers">0</strong><small id="kpiWorkersMeta">لا يوجد عمال بعد</small></button>
+            <button class="admin-kpi" data-page="adminCompanies"><span>🏢 الشركات</span><strong id="kpiCompanies">0</strong><small id="kpiCompaniesMeta">لا توجد شركات بعد</small></button>
+            <button class="admin-kpi" data-page="adRequests"><span>📣 الإعلانات وطلبات التواصل</span><strong id="kpiAds">0</strong><small id="kpiAdsMeta">لا توجد إعلانات بعد</small></button>
+            <button class="admin-kpi" data-page="applications"><span>📨 طلبات التوظيف</span><strong id="kpiApps">0</strong><small id="kpiAppsMeta">لا توجد طلبات بعد</small></button>
+          </div>
+          <div class="insight-grid" id="shortageBoard"></div>
+          <div class="admin-charts">
+            <div class="card">
+              <div class="card-header"><h3>توزيع الحسابات والإعلانات</h3></div>
+              <div class="donut-wrap">
+                <canvas id="mixChart" width="220" height="220"></canvas>
+                <div class="donut-legend" id="mixLegend"></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>تحليل العمال حسب المهنة</h3></div>
+              <div id="professionChart" class="bar-chart"></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>حالة الإعلانات</h3></div>
+              <div id="adsChart" class="bar-chart"></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h3>النشاط خلال آخر 7 أيام</h3></div>
+              <div id="weekChart" class="week-chart"></div>
+            </div>
+          </div>
+        </div>
+        <div id="workerHomeBlocks">
+        <div class="hero-grid">
+          <div class="hero"><h2>ابنِ مستقبلك المهني معنا</h2><p>منصة ذكية لتقييم المهارات وتوظيف العمالة الفنية باستخدام المحاكاة الرقمية والذكاء الاصطناعي.</p><button class="primary-btn" data-page="jobs">ابدأ الآن</button></div>
+          <div class="progress-card"><h4>اكتمال ملفك الشخصي</h4><div class="circle" id="profileCircle"><strong id="profilePercent">0%</strong></div><a href="#" data-page="profile">استكمال الملف الشخصي</a></div>
+        </div>
+        <div id="quickServicesWrap">
+          <div class="section-title"><h3>الخدمات السريعة</h3><a data-page="jobs">عرض الكل</a></div>
+          <div class="service-grid">
+            <div class="service-card" data-page="simulator"><div class="service-icon blue">▣</div><h4>اختبار المهارات</h4><p>25 سؤالاً بأسلوب انترفيو</p></div>
+            <div class="service-card" data-page="profile"><div class="service-icon green">♙</div><h4>إنشاء ملف مهني</h4><p>بياناتك وخبراتك</p></div>
+            <div class="service-card" data-page="ai"><div class="service-icon purple">🧠</div><h4>تقييم بالذكاء الاصطناعي</h4><p>مدى ملاءمتك للوظائف</p></div>
+            <div class="service-card" data-page="jobs"><div class="service-icon orange">⌕</div><h4 id="quickJobService">البحث عن وظيفة</h4><p>وظائف وفرص جديدة</p></div>
+          </div>
+        </div>
+        <div id="companyAdHome" class="company-ad-home hidden">
+          <div class="section-title"><h3>اعلان هنا للشركة</h3><a data-page="announce">طلب إعلان على الموقع</a></div>
+          <div class="company-ad-banner">
+            <div class="company-ad-copy">
+              <span class="company-ad-badge">📣 إعلان شركات</span>
+              <h3>اطلب إعلانًا لشركتك داخل الموقع</h3>
+              <p>هذا الإعلان مخصص لظهور شركتك على المنصة، وليس لإعلان وظائف أو موظفين. بعد الإرسال سيصل طلبك للأدمن مع رقم الشركة.</p>
+              <div class="company-ad-meta">
+                <span>👤 جنة هيثم جمعة</span>
+                <span>📍 كفر الشيخ — مصر</span>
+                <span dir="ltr">📞 01505677212</span>
+              </div>
+              <div class="company-ad-actions">
+                <button class="primary-btn" type="button" data-page="announce">طلب إعلان على الموقع</button>
+              </div>
+            </div>
+            <div class="company-ad-side">
+              <strong>إعلان الشركة</strong>
+              <p>اضغط لطلب إعلان شركتك داخل الموقع، وسيصل رقم الشركة للأدمن.</p>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="card"><div class="card-header"><h3>وظائف مقترحة لك</h3><a data-page="jobs">عرض الكل</a></div><div id="homeJobsList"><div style="text-align:center;padding:22px;color:var(--muted);font-size:12px">لا توجد وظائف منشورة حالياً.</div></div></div>
+          <div class="card"><div class="card-header"><h3>إحصائيات المنصة</h3></div><div class="mini-stats">
+            <div class="mini-stat"><span>الوظائف المتاحة</span><strong id="statJobs">0</strong><small>تتحدث تلقائياً</small></div>
+            <div class="mini-stat"><span>الشركات المسجلة</span><strong id="statCompanies">0</strong><small>تتحدث تلقائياً</small></div>
+            <div class="mini-stat"><span>طلبات التوظيف</span><strong id="statApplications">0</strong><small>تتحدث تلقائياً</small></div>
+            <div class="mini-stat"><span>نتيجة آخر اختبار</span><strong id="statScore">0%</strong><small>لم يتم الاختبار</small></div>
+          </div></div>
+        </div>
+        </div>
+      </div>
+
+      <div class="page" id="profile"><div class="page-heading"><div><h2>الملف الشخصي</h2><p>أكمل بياناتك لزيادة فرص ظهورك أمام الشركات.</p></div><button class="primary-btn" id="saveProfile">حفظ التغييرات</button></div><div class="card form-card"><div class="form-grid">
+        <div class="form-group"><label>الاسم بالكامل</label><input id="nameInput" type="text" value=""></div>
+        <div class="form-group"><label>رقم الهاتف</label><input id="phoneInput" type="tel" value=""></div>
+        <div class="form-group"><label>المراسل</label><input id="messengerInput" type="text" placeholder="رقم الواتساب أو حساب المراسل"></div>
+        <div class="form-group"><label>البريد الإلكتروني</label><input id="emailInput" type="email" value=""></div>
+        <div class="form-group"><label>المحافظة</label><input id="govInput" type="text" placeholder="اكتب محافظتك"></div>
+        <div class="form-group"><label>المهنة الأساسية</label><input id="professionInput" type="text" placeholder="اكتب مهنتك الأساسية"></div>
+        <div class="form-group"><label>مهن أخرى <small style="color:var(--muted);font-weight:400">(اختياري)</small></label><input id="otherProfessionsInput" type="text" placeholder="اكتب أي مهن إضافية إن وجدت"></div>
+        <div class="form-group"><label>سنوات الخبرة</label><input id="experienceInput" type="number" min="0" value=""></div>
+        <div class="form-group full"><label>نبذة مهنية</label><textarea id="bioInput" placeholder="اكتب نبذة عن خبرتك ومهاراتك"></textarea></div>
+      </div></div></div>
+
+      <div class="page" id="passport">
+        <div class="page-heading"><div><h2>جواز المهارة</h2><p>ملف موثّق يجمع المهنة والمهارات والاختبارات والخبرة والتقييمات والأعمال السابقة.</p></div></div>
+        <div id="passportDirectory" class="hidden"></div>
+        <div id="passportEditor" class="card form-card" style="margin-bottom:16px">
+          <h3 style="margin-bottom:12px">تحديث جواز المهارة</h3>
+          <div class="form-group"><label>المهارات العملية</label><textarea id="skillsInput" placeholder="مثال: تمديدات كهرباء، قراءة مخططات، صيانة لوحات"></textarea></div>
+          <div class="form-grid" style="margin-top:12px">
+            <div class="form-group"><label>اسم العمل السابق</label><input id="workTitleInput" placeholder="مثال: صيانة مصنع"></div>
+            <div class="form-group"><label>جهة العمل</label><input id="workPlaceInput" placeholder="مثال: شركة النور"></div>
+            <div class="form-group"><label>سنة العمل</label><input id="workYearInput" placeholder="2024"></div>
+            <div class="form-group"><label>وصف مختصر</label><input id="workNoteInput" placeholder="ماذا أنجزت؟"></div>
+          </div>
+          <div class="form-actions"><button class="secondary-btn" type="button" id="addWorkBtn">إضافة عمل سابق</button><button class="primary-btn" type="button" id="savePassportBtn">حفظ جواز المهارة</button></div>
+          <div id="worksPreview" style="margin-top:12px"></div>
+        </div>
+        <div id="passportView"></div>
+      </div>
+
+      <div class="page" id="jobs">
+        <div class="page-heading"><div><h2 id="jobsTitle">الوظائف</h2><p>الوظائف المنشورة تظهر هنا فور نشرها من أصحاب الشركات.</p></div></div>
+        <div class="card" id="workerSearchSection"><div class="form-group"><label>بحث عن وظيفة</label><div style="display:flex;gap:10px"><input id="jobSearch" placeholder="اكتب اسم الوظيفة أو المهنة..."><button class="primary-btn" id="searchBtn">بحث</button></div></div></div>
+        <div class="jobs-list" id="jobsList" style="margin-top:18px"></div>
+        <div class="card" id="companyProfileSection" style="display:none;margin-bottom:18px"><h3>بيانات الشركة</h3><div class="form-grid" style="margin-top:15px"><div class="form-group"><label>اسم الشركة</label><input id="companyNameEdit" placeholder="اسم الشركة"></div><div class="form-group"><label>رقم الهاتف</label><input id="companyPhoneEdit" placeholder="01xxxxxxxxx"></div><div class="form-group full"><label>المراسل</label><input id="companyMessengerEdit" placeholder="رقم الواتساب أو حساب المراسل"></div></div><button class="primary-btn" id="saveCompanyProfileBtn" style="margin-top:10px">حفظ بيانات الشركة</button></div>
+        <div class="card" id="companyRecruitmentSection" style="display:none;margin-top:18px"><h3>إضافة فرصة عمل جديدة</h3><div class="form-grid" style="margin-top:15px"><div class="form-group full"><label>المتطلبات / اسم الوظيفة</label><input id="postReq" placeholder="مثال: فني كهرباء"></div><div class="form-group"><label>الخبرة المطلوبة</label><input id="postExp" placeholder="مثال: 3 سنوات"></div><div class="form-group"><label>المرتب المقترح</label><input id="postSalary" placeholder="مثال: 6000 جنيه"></div><div class="form-group"><label>رقم التواصل</label><input id="postPhone" placeholder="01xxxxxxxxx"></div></div><button class="primary-btn" id="publishJobBtn" style="margin-top:10px">نشر الوظيفة</button></div>
+      </div>
+
+      <div class="page" id="applications"><div class="page-heading"><div><h2 id="applicationsTitle">طلبات التوظيف</h2><p id="applicationsDesc">تابع الطلبات التي قدمتها أو وصلت إلى شركتك.</p></div></div>
+        <div class="card" id="talentSearchCard" style="display:none;margin-bottom:16px">
+          <div class="form-group"><label>البحث بالتخصص المهني</label>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <input id="talentSearch" placeholder="اكتب المهنة: كهرباء، لحام، تبريد، صيانة...">
+              <button class="primary-btn" id="talentSearchBtn" type="button">بحث عن التخصص</button>
+            </div>
+          </div>
+          <div id="shortageHint" class="shortage-hint"></div>
+        </div>
+        <div class="card" id="applicationsPanel"><div style="text-align:center;padding:25px;color:var(--muted);font-size:13px">لا توجد طلبات توظيف حالياً.</div></div></div>
+
+      <div class="page" id="simulator"><div class="page-heading"><div><h2>اختبار المهارات</h2><p>25 سؤالاً بأسلوب المقابلة الشخصية — تتغيّر الأسئلة وترتيب الاختيارات في كل محاولة.</p></div></div><div class="simulator"><div class="skill-box"><h2>اختبار المهارات المهنية</h2><p>يقيس البراعة الفنية، السلامة المهنية، العمل الجماعي، والاستعداد للعمل.</p><div class="skill-options"><button class="skill-option selected" data-skill="all">🛠️ اختبار شامل</button></div><button class="primary-btn" id="startTest" style="margin-top:25px">بدء الاختبار / إعادة المحاولة</button></div><div class="card score-card"><h3>آخر نتيجة</h3><div class="score"><strong id="scoreCircle">0%</strong></div><p id="scoreText">لم يتم إجراء الاختبار بعد.</p><button class="secondary-btn" style="margin-top:20px" id="viewCertificate">عرض النتيجة</button></div></div><div class="card" style="margin-top:20px"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><span id="quizProgressText" style="font-weight:800;font-size:12px;color:var(--muted)">السؤال 1 من 25</span><span class="status" id="quizCatBadge">فئة السؤال</span></div><div style="height:9px;background:var(--progress-track);border-radius:9px;overflow:hidden;margin:12px 0 18px"><span id="quizProgressBar" style="display:block;height:100%;width:0;background:var(--primary);border-radius:9px"></span></div><h3 id="question">ابدأ الاختبار لعرض السؤال</h3><div id="answers"></div><button class="primary-btn" id="nextQuestion" style="margin-top:16px;display:none">التالي</button></div></div>
+
+      <div class="page" id="results"><div class="page-heading"><div><h2>نتائج التقييم</h2><p>تحليل مفصل لآخر اختبار مهارات.</p></div></div><div class="card" id="resultsPanel"><div style="text-align:center;padding:25px;color:var(--muted)">لم يتم إجراء اختبار المهارات بعد.</div></div></div>
+      <div class="page" id="ai"><div class="page-heading"><div><h2>التقييم بالذكاء الاصطناعي</h2><p>تقدير مدى ملاءمتك للوظائف الفنية بناءً على نتائج الاختبار.</p></div></div><div class="card" id="aiPanel"><div style="text-align:center;padding:25px;color:var(--muted)">أكمل الاختبار أولاً لتفعيل التحليل.</div></div><div class="card" style="margin-top:16px;text-align:center"><button class="primary-btn" id="aiBtn">تشغيل تحليل جديد 🤖</button></div></div>
+        <div class="page" id="companies"><div class="page-heading"><div><h2>الشركات</h2><p>الشركات التي تبحث عن عمالة فنية.</p></div></div><div class="jobs-list" id="companiesList"><div class="card" style="text-align:center;padding:25px;color:var(--muted)">لا توجد شركات مسجلة حالياً.</div></div></div>
+      <div class="page admin-only-page" id="adminWorkers"><div class="page-heading"><div><h2>👷 الموظفين</h2><p>كل العمال الذين أضافوا حساباتهم.</p></div></div><div class="card" id="adminWorkersList"></div></div>
+      <div class="page admin-only-page" id="adminCompanies"><div class="page-heading"><div><h2>🏢 الشركات المضافة</h2><p>كل الشركات التي سجلت في الموقع.</p></div></div><div class="card" id="adminCompaniesList"></div></div>
+      <div class="page admin-only-page" id="adRequests"><div class="page-heading"><div><h2>📣 إعلانات التواصل</h2><p>كل شخص أو شركة أرسل إعلانًا أو طلب تواصل.</p></div></div><div class="card" id="adRequestsList"></div></div>
+
+      <div class="page" id="announce"><div class="page-heading"><div><h2 id="announceTitle">اعلان هنا</h2><p id="announceDesc">اطلب إعلانًا لشركتك داخل الموقع ليظهر للأدمن.</p></div></div>
+        <div class="panel-grid" id="workerAnnouncePanel">
+          <div class="card"><h3>التواصل مع صاحب الموقع</h3><div style="display:grid;gap:13px;margin-top:15px"><div><strong>الاسم:</strong> جنة هيثم جمعة</div><div><strong>المحافظة:</strong> كفر الشيخ</div><div><strong>الدولة:</strong> مصر 🇪🇬</div><div><strong>رقم الهاتف:</strong> <span dir="ltr">01505677212</span></div><div style="margin-top:5px;color:var(--muted);font-weight:700">عند الضغط على «اتصل بنا» سيتم تسجيل طلب التواصل وإرسال إشعار للإدمن.</div><a class="primary-btn" id="adContactBtn" href="tel:01505677212" style="display:inline-block;text-align:center;margin-top:8px">📞 اتصل بنا</a></div></div>
+        </div>
+        <div class="card" id="companyAnnouncePanel" style="display:none">
+          <h3>طلب إعلان للشركة على الموقع</h3>
+          <p style="color:var(--muted);font-size:12px;line-height:1.9;margin:8px 0 14px">هذا الطلب لإعلان الشركة داخل المنصة فقط، وليس لإعلان موظفين أو وظائف.</p>
+          <div class="form-group"><label>اسم الشركة</label><input id="adCompanyName" placeholder="اسم الشركة"></div>
+          <div class="form-group" style="margin-top:10px"><label>رقم الشركة</label><input id="adPhone" inputmode="numeric" maxlength="11" placeholder="01xxxxxxxxx"></div>
+          <div class="form-group" style="margin-top:10px"><label>تفاصيل الإعلان المطلوب على الموقع</label><textarea id="adBody" placeholder="مثال: نريد إعلانًا بارزًا لشركتنا في الصفحة الرئيسية"></textarea></div>
+          <input id="adTitle" type="hidden" value="طلب إعلان شركة على الموقع">
+          <button class="primary-btn" id="sendAdBtn" style="margin-top:12px">📣 إرسال طلب الإعلان للأدمن</button>
+        </div>
+      </div>
+        <div class="page" id="notifications"><div class="page-heading"><div><h2>الإشعارات</h2><p>التنبيهات الفعلية التي تنتج عن نشاط الحساب.</p></div></div><div class="jobs-list" id="notificationsList"><div class="card" style="text-align:center;padding:25px;color:var(--muted)">لا توجد إشعارات حالياً.</div></div></div>
+      <div class="page" id="messages"><div class="page-heading"><div><h2>المراسل</h2><p>محادثة مباشرة بين العامل والشركة بعد تسجيل الدخول.</p></div></div>
+        <div class="messenger">
+          <div class="card messenger-list">
+            <div class="form-group"><label>بدء محادثة جديدة</label><select id="chatTarget"></select></div>
+            <button class="primary-btn" id="startChatBtn" style="margin-top:8px;width:100%">بدء المراسلة</button>
+            <div id="chatThreads" style="margin-top:14px"></div>
+          </div>
+          <div class="card messenger-thread">
+            <div class="messenger-head" id="chatTitle">اختر محادثة</div>
+            <div class="messenger-body" id="chatBody"><div style="text-align:center;color:var(--muted);padding:30px 10px">لا توجد محادثة مفتوحة.</div></div>
+            <div class="messenger-compose">
+              <input id="chatInput" placeholder="اكتب رسالتك هنا...">
+              <button class="primary-btn" id="sendChatBtn">إرسال</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="page" id="settings"><div class="page-heading"><div><h2>الإعدادات</h2><p>تحكم في تفضيلات الحساب.</p></div></div><div class="card form-card"><div class="form-grid"><div class="form-group full"><label>المظهر</label><div class="theme-switch"><div><strong id="themeLabel">الوضع الفاتح</strong><span>فعّل الوضع الليلي لراحة العين أثناء الاستخدام ليلاً.</span></div><button class="primary-btn" id="themeSettingsBtn" type="button">تفعيل الوضع الليلي</button></div></div><div class="form-group full"><label>لغة المنصة</label><select><option>العربية</option><option>English</option></select></div><div class="form-group full"><label>الإشعارات</label><select><option>تفعيل</option><option>إيقاف</option></select></div></div><div class="form-actions"><button class="primary-btn" id="saveSettings">حفظ الإعدادات</button><button class="secondary-btn" type="button" id="loadDemoBtn">تحميل بيانات تجريبية</button></div></div></div>
+    </section>
+  </main>
+</div>
+
+<div class="notification" id="toast"></div>
+<div id="authModal" style="position:fixed;inset:0;background:rgba(7,27,53,.92);display:flex;align-items:center;justify-content:center;z-index:999;padding:18px">
+  <div class="card" style="width:min(480px,100%);text-align:center;padding:26px">
+    <div style="font-size:40px">💼</div><h2 style="font-size:21px;margin:8px 0">مرحباً بك في المنصة</h2><p style="font-size:12px;color:var(--muted);margin-bottom:16px">حدد نوع الحساب وأدخل بياناتك للبدء</p>
+    <div id="roleOptions" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px"><button type="button" class="secondary-btn role-btn" data-role="عامل">👷 عامل</button><button type="button" class="secondary-btn role-btn" data-role="صاحب شركة">🏢 صاحب شركة</button><button type="button" class="secondary-btn role-btn" data-role="ادمن">🛡️ ادمن</button></div>
+    <form id="authForm"><div class="form-group" style="text-align:right"><label>الاسم بالكامل / اسم الشركة</label><input id="authName" required></div><div class="form-group" style="text-align:right;margin-top:10px"><label>رقم الهاتف</label><input id="authPhone" required inputmode="numeric" maxlength="11"></div><div class="form-group" id="authMessengerWrap" style="text-align:right;margin-top:10px"><label>المراسل</label><input id="authMessenger" placeholder="رقم الواتساب أو حساب المراسل"></div><button class="primary-btn" style="width:100%;margin-top:15px">دخول</button></form>
+    <div id="adminLoginInfo" style="display:none;margin-top:14px;padding:13px;border-radius:12px;background:#eef5ff;text-align:right;font-size:11px;line-height:1.9"><strong style="color:var(--primary)">🛡️ حساب صاحب الموقع</strong><br>الاسم: جنة هيثم جمعة<br>المحافظة: كفر الشيخ 🇪🇬<br>رقم الهاتف: <span dir="ltr">01154093079</span></div><div style="font-size:10px;color:var(--muted);margin-top:10px">حساب الادمن محجوز لصاحب الموقع ويتم التحقق من الرقم من جهة الخادم في النسخة الحقيقية.</div>
+  </div>
+</div>
+<div class="notification" id="modalToast"></div>
+
+<script>
+/* Smart Job Platform — functional FKJ merge */
+const THEME_KEY='smart_job_theme_v1';
+function currentTheme(){return document.documentElement.getAttribute('data-theme')==='dark'?'dark':'light'}
+function applyTheme(theme){
+  const dark=theme==='dark';
+  document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+  try{localStorage.setItem(THEME_KEY,dark?'dark':'light')}catch(e){}
+  const btn=document.getElementById('themeToggle');
+  const settingsBtn=document.getElementById('themeSettingsBtn');
+  const label=document.getElementById('themeLabel');
+  if(btn){btn.textContent=dark?'☀️': '🌙';btn.title=dark?'الوضع الفاتح':'الوضع الليلي'}
+  if(settingsBtn)settingsBtn.textContent=dark?'تفعيل الوضع الفاتح':'تفعيل الوضع الليلي';
+  if(label)label.textContent=dark?'الوضع الليلي':'الوضع الفاتح';
+}
+function toggleTheme(){applyTheme(currentTheme()==='dark'?'light':'dark');showToast(currentTheme()==='dark'?'تم تفعيل الوضع الليلي 🌙':'تم تفعيل الوضع الفاتح ☀️')}
+const STORE_KEY='smart_job_platform_fkj_v4';
+const OWNER_NAME='جنة هيثم جمعة';
+const OWNER_PHONE='01154093079';
+const OWNER_GOV='كفر الشيخ';
+const OWNER_COUNTRY='مصر';
+let state=loadState();
+let selectedRole=state.session?.role||'عامل';
+let currentUserName=state.session?.name||'';
+let currentUserPhone=state.session?.phone||'';
+let currentUserEmail=state.session?.email||'';
+let currentUserMessenger=state.session?.messenger||'';
+let lastResults=state.session?.lastResults||null;
+let quiz=[],qi=0,catStats={},testRunning=false;
+const pages=[...document.querySelectorAll('.page')];
+const navLinks=[...document.querySelectorAll('.nav-link')];
+const sidebar=document.getElementById('sidebar');
+const toast=document.getElementById('toast');
+
+const CATS={
+  tech:{label:'البراعة الفنية',color:'#8b5cf6',icon:'🛠️'},
+  safety:{label:'السلامة المهنية',color:'#2f6feb',icon:'🦺'},
+  teamwork:{label:'العمل الجماعي',color:'#22a559',icon:'🤝'},
+  readiness:{label:'الاستعداد للعمل',color:'#f5941f',icon:'🚀'}
+};
+
+function baseWorkers(){return {} }
+function blankState(){return {workers:baseWorkers(),companies:{},jobs:[],applications:[],notifications:[],messages:[],chats:[],adRequests:[],session:null}}
+function daysAgo(n, hour){const d=new Date();d.setDate(d.getDate()-n);d.setHours(hour||10,(n*7)%60,0,0);return d.toISOString()}
+function demoScore(profession,tech,safety,teamwork,readiness,ago){
+  const cats={tech,safety,teamwork,readiness};
+  const overall=Math.round(tech*.35+safety*.30+readiness*.20+teamwork*.15);
+  let topCat='tech',weakCat='tech';
+  Object.keys(cats).forEach(c=>{if(cats[c]>cats[topCat])topCat=c;if(cats[c]<cats[weakCat])weakCat=c});
+  return {cats,overall,topCat,weakCat,profession,date:daysAgo(ago==null?2:ago)};
+}
+function padPhone(prefix, n){return prefix+String(n).padStart(11-prefix.length,'0')}
+function buildDemoState(){
+  const first=['أحمد','محمد','محمود','سعيد','ياسر','كريم','حسن','علي','إبراهيم','مصطفى','عمر','يوسف','عبد الرحمن','طارق','هشام','وليد','شريف','حمدي','سامي','فؤاد','خالد','نادر','حسام','رمضان','جمال','عادل','أشرف','تامر','حمزة','سعد','بدر','ماجد','أيمن','حاتم','زكريا','شعبان','فتحي','رضا','عماد','سيد'];
+  const last=['السيد','حسن','إبراهيم','عطية','فوزي','محمود','علي','عبد الله','غانم','شحاتة','أبو زيد','متولي','دسوقي','النجار','سلامة','الشامي','البحيري','العطار','يوسف','فرج'];
+  const govs=['كفر الشيخ','الغربية','الدقهلية','البحيرة','المنوفية','القاهرة','الإسكندرية','دمياط','الشرقية','القليوبية','المنصورة','دسوق','طنطا','المحلة الكبرى','بلطيم'];
+  const professions=['فني كهرباء','فني صيانة','عامل لحام','فني تبريد وتكييف','فني ميكانيكا'];
+  const extras=['صيانة لوحات','ميكانيكا خفيفة','تجهيز معادن','صيانة وحدات سبليت','صيانة محامل','قراءة مخططات','لحام مواسير','تركيب عدادات','صيانة مضخات',''];
+  const skillMap={
+    'فني كهرباء':'تمديدات كهرباء، قراءة مخططات، صيانة لوحات، ملتيميتر، تأريض',
+    'فني صيانة':'صيانة وقائية، محاذاة، تشحيم، تشخيص اهتزاز، توثيق أعطال',
+    'عامل لحام':'لحام قوس، تجهيز حواف، فحص بصري، ضبط تيار، تنظيف خبث',
+    'فني تبريد وتكييف':'شحن غاز وفق الإجراء، تنظيف مكثف، فحص تصريف، قياس ضغوط، فلاتر',
+    'فني ميكانيكا':'مفتاح عزم، محاذاة أعمدة، استبدال محامل، سيور، فحص تسريب'
+  };
+  const workMap={
+    'فني كهرباء':['صيانة لوحات مصنع','تمديدات ورشة','فحص غرفة كهرباء'],
+    'فني صيانة':['صيانة خط إنتاج','خطة وقائية أسبوعية','إصلاح عطل مفاجئ'],
+    'عامل لحام':['لحام هياكل معدنية','وصلات خزانات','تجهيز ورشة'],
+    'فني تبريد وتكييف':['صيانة وحدات إدارية','تركيب سبليت','تنظيف مكثفات'],
+    'فني ميكانيكا':['إصلاح مجموعة نقل حركة','استبدال محامل','ضبط سيور']
+  };
+  const companyNames=[
+    'شركة النور للصيانة','مصنع الدلتا للصناعات','شركة الأمان للتبريد','مؤسسة الصفا للكهرباء','شركة النيل الميكانيكية',
+    'ورش التقدم للحام','شركة برد مصر','مصنع السلام للأغذية','شركة إعمار للمعدات','مؤسسة الفتح للخدمات',
+    'شركة الأمل للصيانة','مصنع كفر الشيخ للغزل','شركة الدلتا للكهرباء','ورش البحر للحام','شركة التبريد الحديث',
+    'مصنع النجمة للصناعات','شركة عمار للمقاولات','مؤسسة رويال سرفيس','شركة بيت الخبرة الفني','ورش الشرق للمعادن'
+  ];
+  const jobTitles={
+    'فني كهرباء':['فني كهرباء صناعي','فني لوحات كهرباء','فني تمديدات كهرباء','كهربائي صيانة مصانع'],
+    'فني صيانة':['فني صيانة معدات','فني صيانة وقائية','فني صيانة خطوط إنتاج','فني أعطال صناعية'],
+    'عامل لحام':['عامل لحام','لحام هياكل معدنية','فني لحام ورشة','لحام مواسير'],
+    'فني تبريد وتكييف':['فني تبريد وتكييف','فني صيانة تكييف','فني وحدات سبليت','فني تبريد تجاري'],
+    'فني ميكانيكا':['فني ميكانيكا','فني معدات دوارة','فني صيانة ميكانيكية','فني محامل وسيور']
+  };
+  const salaries=['5500 جنيه','6000 جنيه','6500 جنيه','7000 جنيه','7500 جنيه','8000 جنيه','8500 جنيه','9000 جنيه','حسب الاتفاق'];
+  const exps=['سنة','سنتان','3 سنوات','4 سنوات','5 سنوات','6 سنوات'];
+  const bios=[
+    'صاحب خبرة عملية في المواقع الصناعية وملتزم بإجراءات السلامة.',
+    'يعمل وفق المخطط والتعليمات ويهتم بتوثيق الأعطال بعد الإصلاح.',
+    'يجيد العمل ضمن فريق ويراجع القياسات قبل اتخاذ القرار.',
+    'يركز على الجودة والتشخيص الصحيح قبل تغيير القطع.',
+    'لديه استعداد للتعلم على معدات جديدة مع الحفاظ على السلامة.'
+  ];
+
+  const workers={};
+  for(let i=1;i<=80;i++){
+    const name=first[(i-1)%first.length]+' '+last[(i*3)%last.length]+' '+last[(i*7)%last.length];
+    const phone=padPhone('0101', i);
+    const profession=professions[(i-1)%professions.length];
+    const tech=58+(i*13)%40, safety=60+(i*11)%38, teamwork=55+(i*17)%40, readiness=57+(i*19)%38;
+    const res=demoScore(profession,tech,safety,teamwork,readiness,(i%10)+1);
+    const works=(workMap[profession]||[]).slice(0,1+(i%3)).map((title,idx)=>({
+      title, place:companyNames[(i+idx)%companyNames.length], year:String(2022+(i+idx)%4), note:'تنفيذ العمل حسب التعليمات مع مراجعة النتيجة.'
+    }));
+    workers[phone]={
+      name, phone,
+      email:'worker'+i+'@demo.smartjob.eg',
+      messenger:phone,
+      gov:govs[(i-1)%govs.length],
+      profession,
+      otherProfessions:extras[i%extras.length],
+      experience:String(1+(i%12)),
+      bio:bios[i%bios.length]+' المهنة: '+profession+'.',
+      skills:skillMap[profession],
+      previousWorks:works,
+      lastResults:res,
+      testHistory:[res, demoScore(profession, Math.max(40,tech-8), Math.max(40,safety-5), teamwork, readiness, (i%10)+4)],
+      createdAt:daysAgo((i%18)+1, 8+(i%10))
+    };
+  }
+
+  const companies={};
+  companyNames.forEach((name,idx)=>{
+    const phone=padPhone('0122', idx+1);
+    companies[phone]={name,phone,messenger:phone,createdAt:daysAgo((idx%14)+1, 9)};
+  });
+
+  const companyList=Object.values(companies);
+  const jobs=[];
+  let jobN=0;
+  companyList.forEach((co,ci)=>{
+    professions.forEach((prof,pi)=>{
+      if((ci+pi)%2!==0 && jobN>28 && ci>8) return;
+      jobN++;
+      const titles=jobTitles[prof];
+      jobs.push({
+        id:'JOB-demo'+jobN,
+        title:titles[(ci+pi)%titles.length],
+        company:co.name,
+        companyPhone:co.phone,
+        location:(govs[ci%govs.length])+'، مصر',
+        exp:exps[(ci+pi)%exps.length],
+        salary:salaries[(ci*3+pi)%salaries.length],
+        phone:co.phone,
+        createdAt:daysAgo((ci+pi)%12, 11)
+      });
+    });
+  });
+
+  const workerList=Object.values(workers);
+  const statuses=['قيد المراجعة','قيد المراجعة','مقبول','مرفوض','قيد المراجعة'];
+  const applications=jobs.slice(0,45).map((j,i)=>{
+    const w=workerList[i%workerList.length];
+    return {
+      id:'APP-demo'+(i+1),
+      jobId:j.id, job:j.title, company:j.company, companyPhone:j.companyPhone,
+      workerPhone:w.phone, workerName:w.name, workerEmail:w.email, workerGov:w.gov,
+      workerProfession:w.profession, workerOtherProfessions:w.otherProfessions,
+      workerMessenger:w.messenger, workerExperience:w.experience, workerBio:w.bio,
+      score:w.lastResults.overall, status:statuses[i%statuses.length], date:daysAgo(i%9)
+    };
+  });
+
+  const notifications=[
+    {id:'N-owner-1',toPhone:'01154093079',title:'👷 موظفون جدد سجلوا في المنصة',body:'تم تسجيل مجموعة كبيرة من العمال التجريبيين لاختبار لوحة الإدارة.',date:daysAgo(1),read:false},
+    {id:'N-owner-2',toPhone:'01154093079',title:'🏢 شركات جديدة سجلت في المنصة',body:'تمت إضافة شركات تجريبية متعددة مع وظائف منشورة.',date:daysAgo(2),read:false},
+    {id:'N-owner-3',toPhone:'01154093079',title:'📣 طلبات إعلان تحتاج مراجعة',body:'توجد طلبات إعلان وتواصل تجريبية غير مقروءة.',date:daysAgo(0),read:false}
+  ];
+  applications.slice(0,30).forEach((a,i)=>{
+    notifications.push({id:'N-app-c-'+i,toPhone:a.companyPhone,title:'طلب توظيف جديد',body:'تقدّم '+a.workerName+' على وظيفة '+a.job+'.',date:a.date,read:i%3===0});
+    if(a.status!=='قيد المراجعة'){
+      notifications.push({id:'N-app-w-'+i,toPhone:a.workerPhone,title:'تحديث طلب '+a.job,body:'الشركة '+a.company+' قامت بتغيير حالة الطلب إلى: '+a.status+'.',date:a.date,read:false});
+    }
+  });
+  workerList.slice(0,25).forEach((w,i)=>{
+    notifications.push({id:'N-reg-w-'+i,toPhone:'01154093079',title:'👷 موظف جديد سجل في المنصة',body:'تمت إضافة موظف جديد: '+w.name+' — '+w.phone,date:w.createdAt,read:i>8});
+  });
+  companyList.forEach((c,i)=>{
+    notifications.push({id:'N-reg-c-'+i,toPhone:'01154093079',title:'🏢 شركة جديدة سجلت في المنصة',body:'تمت إضافة شركة جديدة: '+c.name+' — '+c.phone,date:c.createdAt,read:i>5});
+  });
+
+  const messages=[];
+  const chats=[];
+  for(let i=0;i<28;i++){
+    const w=workerList[i];
+    const co=companyList[i%companyList.length];
+    const id=[w.phone,co.phone].sort().join('_');
+    chats.push({
+      id,
+      participants:[w.phone,co.phone],
+      messages:[
+        {from:w.phone,text:'السلام عليكم، قدمت على وظيفة لديكم وأريد معرفة الخطوات التالية.',date:daysAgo((i%8)+1,12)},
+        {from:co.phone,text:'وعليكم السلام، استلمنا الطلب وجاري مراجعة جواز المهارة.',date:daysAgo((i%8)+1,13)},
+        {from:w.phone,text:'تمام، أنا متاح للتواصل على نفس الرقم.',date:daysAgo(i%7,15)}
+      ]
+    });
+    messages.push({id:'M-demo'+i,fromPhone:w.phone,toPhone:co.phone,title:'تقديم جديد',preview:w.name,detail:w.name+' — '+w.profession,date:daysAgo(i%7)});
+  }
+
+  const adRequests=[];
+  companyList.forEach((c,i)=>{
+    adRequests.push({
+      id:'AD-co-'+i,name:c.name,phone:c.phone,role:'صاحب شركة',
+      title:'هناك شركة تريد إعلان للموقع',
+      body:'نريد إعلانًا لظهور '+c.name+' داخل المنصة لمدة '+(2+(i%4))+' أسابيع.',
+      source:'site-ad',date:daysAgo(i%10),read:i%4===0
+    });
+  });
+  workerList.slice(0,18).forEach((w,i)=>{
+    adRequests.push({
+      id:'AD-w-'+i,name:w.name,phone:w.phone,role:'عامل',
+      title:'طلب تواصل من إعلان هنا',
+      body:'طلب تواصل تجريبي من العامل '+w.name+' من محافظة '+w.gov+'.',
+      source:'contact',date:daysAgo((i%9)+1),read:i%2===0
+    });
+  });
+
+  return {workers,companies,jobs,applications,notifications,messages,chats,adRequests,session:null};
+}
+function platformLooksEmpty(s){
+  return Object.keys(s.workers||{}).length < 40 || Object.keys(s.companies||{}).length < 10 || (s.jobs||[]).length < 20;
+}
+function mergeDemo(s){
+  const demo=buildDemoState();
+  s.workers=Object.assign({},demo.workers,s.workers||{});
+  s.companies=Object.assign({},demo.companies,s.companies||{});
+  const jobIds=new Set((s.jobs||[]).map(j=>j.id));
+  s.jobs=(s.jobs||[]).concat(demo.jobs.filter(j=>!jobIds.has(j.id)));
+  const appIds=new Set((s.applications||[]).map(a=>a.id));
+  s.applications=(s.applications||[]).concat(demo.applications.filter(a=>!appIds.has(a.id)));
+  const nIds=new Set((s.notifications||[]).map(n=>n.id));
+  s.notifications=(s.notifications||[]).concat(demo.notifications.filter(n=>!nIds.has(n.id)));
+  const mIds=new Set((s.messages||[]).map(m=>m.id));
+  s.messages=(s.messages||[]).concat(demo.messages.filter(m=>!mIds.has(m.id)));
+  const cIds=new Set((s.chats||[]).map(c=>c.id));
+  s.chats=(s.chats||[]).concat(demo.chats.filter(c=>!cIds.has(c.id)));
+  const aIds=new Set((s.adRequests||[]).map(a=>a.id));
+  s.adRequests=(s.adRequests||[]).concat(demo.adRequests.filter(a=>!aIds.has(a.id)));
+  return s;
+}
+function loadState(){
+  let s;
+  try{s=Object.assign(blankState(),JSON.parse(localStorage.getItem(STORE_KEY)||'{}'))}catch{s=blankState()}
+  if(platformLooksEmpty(s)){
+    s=mergeDemo(s);
+    try{localStorage.setItem(STORE_KEY,JSON.stringify(s))}catch(e){}
+  }
+  return s;
+}
+function saveState(){localStorage.setItem(STORE_KEY,JSON.stringify(state))}
+function reloadDemoData(){
+  const keep=state.session;
+  state=Object.assign(blankState(),buildDemoState(),{session:keep});
+  saveState();
+  lastResults=keep&&keep.lastResults?keep.lastResults:null;
+  renderJobs();renderHomeJobs();renderApplications();renderCompanies();renderNotifications();renderMessages();renderResults();renderAI();renderAdminWorkers();renderAdminCompanies();renderAdRequests();updateAdminBadges();updateStats();
+  if(selectedRole==='ادمن')renderAdminDashboard();
+  showToast('تم تحميل بيانات تجريبية لتجربة الموقع ✅');
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function showToast(t){toast.textContent=t;toast.classList.add('show');clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>toast.classList.remove('show'),2600)}
+function navigate(id){
+  if(!id)return;
+  if((id==='adminWorkers'||id==='adminCompanies'||id==='adRequests')&&selectedRole!=='ادمن'){return showToast('هذه الصفحة مخصصة للإدمن فقط 🔒')}
+  document.querySelectorAll('.page').forEach(p=>{
+    const on=p.id===id;
+    p.classList.toggle('active',on);
+    if(selectedRole==='ادمن'&&p.classList.contains('admin-only-page'))p.classList.add('show-admin');
+  });
+  document.querySelectorAll('.nav-link').forEach(n=>n.classList.toggle('active',n.dataset.page===id));
+  sidebar.classList.remove('open');document.body.classList.remove('sidebar-open');
+  if(id==='applications')renderApplications();
+  if(id==='messages')renderMessages();
+  if(id==='notifications')renderNotifications();
+  if(id==='results')renderResults();
+  if(id==='ai')renderAI();
+  if(id==='adminWorkers')renderAdminWorkers();
+  if(id==='adminCompanies')renderAdminCompanies();
+  if(id==='adRequests')renderAdRequests();
+  if(id==='passport')renderPassport();
+  if(id==='companies')renderCompanies();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('sidebar').addEventListener('click',e=>{
+  const link=e.target.closest('.nav-link');
+  if(!link||link.id==='logoutBtn')return;
+  if(link.dataset.page){e.preventDefault();navigate(link.dataset.page)}
+});
+document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',e=>{const id=el.dataset.page;if(id){e.preventDefault();navigate(id)}}));
+document.getElementById('menuBtn').onclick=()=>{
+  if(window.innerWidth<=800){
+    sidebar.classList.toggle('open');
+    document.body.classList.toggle('sidebar-open',sidebar.classList.contains('open'));
+  }else{
+    sidebar.classList.toggle('collapsed');
+    document.querySelector('.main').classList.toggle('sidebar-collapsed');
+  }
+};
+window.addEventListener('resize',()=>{
+  if(window.innerWidth>800){sidebar.classList.remove('open');document.body.classList.remove('sidebar-open');}
+});
+document.getElementById('notificationBtn').onclick=()=>navigate('notifications');
+document.getElementById('avatarBtn').onclick=()=>navigate('profile');
+
+function profileKey(phone){return String(phone||'').replace(/\D/g,'')}
+function profileComplete(p){return !!(p&&p.name&&p.phone&&p.profession&&p.gov&&String(p.experience)!==''&&p.bio&&p.email)}
+function getCurrentProfile(){return state.workers[profileKey(currentUserPhone)]||null}
+
+/* ---------- Profession-specific 25-question banks ---------- */
+const PROFESSION_BANKS={
+'فني كهرباء':[
+['tech','قبل فحص لوحة كهرباء، ما أول إجراء؟',['فصل مصدر التغذية والتأكد من انعدام الجهد بطريقة آمنة','فتح اللوحة فوراً والجهاز يعمل','رفع الجهد لاختبار القاطع','لمس الأسلاك للتأكد من وجود تيار','رش الماء لتبريد اللوحة']],
+['tech','أي أداة تستخدم عادةً للتحقق من الجهد والمقاومة؟',['الملتيميتر المناسب للقياس','مفتاح إنجليزي فقط','مطرقة','فرشاة','كماشة بلا عزل']],
+['tech','إذا كان القاطع يفصل باستمرار بعد تشغيل حمل، ماذا تفعل؟',['تبحث عن سبب الحمل الزائد أو القصر قبل إعادة التشغيل','تستبدل القاطع بأعلى أمبير فوراً','تربط القاطع على وضع التشغيل بالقوة','تتجاهل الفصل','تضع سلكاً مكان القاطع']],
+['tech','ما الهدف من التأريض في التركيبات الكهربائية؟',['تقليل خطر الصعق وتوفير مسار آمن لتيار العطل','زيادة استهلاك الكهرباء','رفع حرارة الكابل','تغيير لون الأسلاك','زيادة سرعة المحرك']],
+['tech','عند اختيار مقطع كابل، ما العامل المهم؟',['الحمل وطول المسار وطريقة التركيب والمواصفة','لون الكابل فقط','وزن الكابل فقط','سعره فقط','شكله الخارجي']],
+['tech','لاحظت سخونة غير طبيعية في وصلة كهربائية، ما التصرف؟',['فصل التغذية وفحص الوصلة والتحميل والتوصيلات','رش ماء على الوصلة','تغطيتها بقطعة قماش','رفع الجهد','الاستمرار حتى تحترق']],
+['tech','ما فائدة اختبار الاستمرارية؟',['التأكد من وجود مسار كهربائي متصل في الدائرة','زيادة الجهد تلقائياً','قياس حرارة المحرك','قياس وزن السلك','تنظيف اللوحة']],
+['tech','عند تغيير قطعة داخل لوحة، ما الأفضل؟',['استخدام قطعة مطابقة للمواصفات والقيمة المطلوبة','اختيار أي قطعة بنفس اللون','اختيار الأرخص فقط','تكبير القيمة دائماً','استخدام قطعة مستعملة دون فحص']],
+['tech','ما القراءة التي تعتمد عليها عند التأكد من انعدام الجهد؟',['قياس مناسب بجهاز اختبار سليم وفق إجراء آمن','النظر إلى السلك فقط','سماع صوت الطنين','لمس السلك باليد','تخمين الحالة']],
+['tech','كيف تشخّص عطلاً كهربائياً غير واضح؟',['تبدأ بالفحص البصري ثم القياس ثم عزل الاحتمالات','تغيّر كل المكونات مرة واحدة','تجرب توصيلات عشوائية','تطرق اللوحة','تعيد التشغيل بلا توقف']],
+['safety','ما أهم وسيلة حماية أثناء العمل الكهربائي؟',['معدات الوقاية المناسبة وإجراءات العزل وفصل الطاقة','ساعة يد','قبعة فقط','حذاء رياضي خفيف','سماعات موسيقى']],
+['safety','ماذا تفعل إذا وجدت سلكاً مكشوفاً؟',['تعزل المكان وتفصل المصدر وتبلغ المسؤول قبل المعالجة','تمسكه بالقفاز وتستمر','تغطيه بشريط عادي دون فصل الطاقة','تتركه','ترش ماء']],
+['safety','لماذا يمنع استخدام أداة كهربائية تالفة؟',['لأن العزل أو المكونات قد تسبب صعقاً أو حريقاً','لأنها أبطأ فقط','لأن لونها قديم','لأنها ثقيلة','لأنها غير جميلة']],
+['safety','ما الإجراء الصحيح قبل الصيانة؟',['تطبيق العزل ووضع بطاقة التحذير حسب إجراء الموقع','بدء العمل بسرعة','إطفاء الضوء فقط','الاعتماد على الذاكرة','سؤال أي شخص عابر']],
+['safety','عند وجود مياه بالقرب من معدات كهربائية، ماذا تفعل؟',['إيقاف العمل وعزل الخطر ومعالجة سبب الرطوبة قبل التشغيل','تشغيل المعدات بحذر','زيادة الإضاءة','تجاهل المياه','استخدام يد مبللة']],
+['teamwork','إذا احتاج كهربائي آخر مساعدة في تتبع عطل، ماذا تفعل؟',['تتبادل القياسات والمعلومات وتنسّقان خطوات الفحص','تخفي القراءات','تلومه','تعمل منفرداً دون إبلاغه','تترك المهمة']],
+['teamwork','اختلفت مع زميل حول سبب العطل، ما الأفضل؟',['مقارنة القياسات والرجوع للمخطط والإجراء المعتمد','الإصرار على رأيك','رفع الصوت','تغيير القطعة مباشرة','ترك المكان']],
+['teamwork','زميل جديد لا يعرف طريقة قراءة المخطط، ماذا تفعل؟',['تشرح له الجزء المطلوب وتراجع معه الخطوات الأساسية','تسخر منه','تمنعه من العمل','تتركه يجرّب وحده','تعطيه مخططاً خاطئاً']],
+['readiness','طُلب منك تركيب دائرة لم تعمل عليها من قبل، ما الأنسب؟',['مراجعة المخطط والتعليمات وطلب التوجيه عند الحاجة','التظاهر بالخبرة','التجربة العشوائية','رفض كل تعلم','نسخ توصيلات دون فهم']],
+['readiness','عند ضيق وقت التسليم في مهمة كهربائية، ماذا تقدم أولاً؟',['السلامة وجودة التنفيذ ثم تنظيم الوقت','السرعة بأي ثمن','إخفاء الأخطاء','تجاوز الاختبارات','تأجيل كل شيء']],
+['readiness','اكتشفت أن نتيجة قياسك لا تتفق مع المتوقع، ماذا تفعل؟',['تراجع الجهاز وطريقة القياس والدائرة قبل الاستنتاج','تغيّر النتيجة لتوافق المتوقع','تتجاهلها','تكسر الجهاز','تعتمد على التخمين']],
+['readiness','ما أفضل عادة لفني الكهرباء الناجح؟',['التحديث المستمر للمعايير والمعدات ومهارات التشخيص','رفض تعلم الجديد','الاعتماد على الخبرة القديمة فقط','تجنب التوثيق','العمل دون فحص']],
+['tech','عند استبدال مفتاح أو قاطع، ما أهم نقطة؟',['مطابقة النوع والقيمة وطريقة التركيب للمواصفة','اختيار أكبر قيمة دائماً','اختيار الأرخص','تغيير الأسلاك عشوائياً','تجاهل الملصق']],
+['tech','لماذا تُقرأ مخططات الدوائر قبل التنفيذ؟',['لفهم نقاط التوصيل ومسار الدائرة وتقليل أخطاء التركيب','للتزيين','لزيادة وزن الكابل','لتحديد لون الحائط','لإلغاء الاختبارات']],
+['safety','إذا شممت رائحة احتراق من لوحة كهرباء، ماذا تفعل؟',['تفصل الطاقة بطريقة آمنة وتبلغ المسؤول وتمنع الاقتراب','تفتحها وهي موصلة','ترش ماء','تقترب للتصوير','تتركها تعمل']],
+],
+'فني صيانة':[
+['tech','ما الفرق الأساسي بين الصيانة الوقائية والعلاجية؟',['الوقائية قبل العطل لتقليله، والعلاجية بعد ظهور المشكلة','لا فرق','العلاجية دائماً أرخص','الوقائية مرة واحدة','العلاجية قبل التشغيل']],
+['tech','إذا ظهر اهتزاز غير معتاد في ماكينة، ما الخطوة الأولى؟',['إيقافها حسب الإجراء وفحص مصدر الاهتزاز قبل الاستمرار','زيادة السرعة','تجاهله','طرق الماكينة','تغيير كل القطع']],
+['tech','لماذا تتم محاذاة الأعمدة في المعدات الدوارة؟',['لتقليل الاهتزاز والتآكل وتحسين التشغيل','لزيادة اللون','لخفض وزن الماكينة','لرفع الصوت','لزيادة عدد المسامير']],
+['tech','ما دور التشحيم الصحيح؟',['تقليل الاحتكاك والتآكل والحفاظ على أداء المكونات','زيادة الحرارة','تنظيف الأرضية','رفع الجهد','تغيير اتجاه الدوران']],
+['tech','عند تركيب قطعة غيار، ما المعيار الأهم؟',['مطابقة المواصفات والمقاس والاعتماد المناسب','لون القطعة','أرخص سعر','أكبر حجم','شكلها فقط']],
+['tech','ما أول خطوة في تشخيص عطل ميكانيكي غامض؟',['الفحص البصري وجمع الأعراض قبل التفكيك العشوائي','تفكيك كل شيء','تغيير المحرك','زيادة الحمل','إعادة التشغيل بلا توقف']],
+['tech','ماذا يعني فحص سجل الأعطال؟',['استخدام تاريخ الأعطال للمساعدة في تحديد نمط المشكلة','حذف التاريخ','تغيير وقت الجهاز','رفع عدد ساعات التشغيل','تجاهله']],
+['tech','إذا ارتفعت حرارة محمل بشكل غير طبيعي، ماذا تفحص؟',['التشحيم والمحاذاة والحمل وحالة المحمل','لون المحمل','الإضاءة','الهواء الخارجي فقط','اسم الشركة']],
+['tech','لماذا تستخدم مفتاح عزم عند بعض التركيبات؟',['لضبط العزم المطلوب وفق المواصفة','لزيادة السرعة فقط','لتلميع المسامير','لقياس الحرارة','للقطع']],
+['tech','كيف تتعامل مع قطعة مستبدلة ما زالت تسبب المشكلة؟',['تراجع التشخيص والسبب الجذري بدلاً من تكرار الاستبدال','تستبدل قطعاً أخرى عشوائياً','تلوم المشغل','توقف عن الفحص','تزيد السرعة']],
+['safety','ماذا تفعل قبل صيانة ماكينة تحتوي أجزاء متحركة؟',['تعزل مصادر الطاقة وتمنع التشغيل غير المقصود','تتركها على سرعة منخفضة','تعمل بيد واحدة','تقترب أثناء الدوران','تزيل الحواجز']],
+['safety','ما خطر إزالة واقي ماكينة دون بديل؟',['زيادة احتمال ملامسة الأجزاء المتحركة والتعرض للإصابة','تقليل الضوضاء','تحسين الجودة','زيادة النظافة','لا خطر']],
+['safety','إذا تسرب زيت على الأرض، ما التصرف الصحيح؟',['تأمين المكان وتنظيف التسرب وفق الإجراء لمنع الانزلاق','تجاهله','زيادة سرعة العمال','تغطيته بورق فقط','رش ماء']],
+['safety','عند استخدام عدة رفع أو ونش للصيانة، ما الذي تتحقق منه؟',['سلامة المعدة وقدرتها وأوزان الحمل وطريقة الرفع المعتمدة','لون الونش','سرعة الرفع فقط','حجم المكان فقط','اسم المصنع فقط']],
+['teamwork','وجدت سبب عطل يختلف عن توقع فريقك، ماذا تفعل؟',['تشارك الأدلة والقياسات وتناقشها مع الفريق','تخفيها','تغيّر التقرير','تلوم أحداً','توقف العمل دون شرح']],
+['teamwork','الفني الآخر سلّمك ماكينة بعد صيانة، ماذا تراجع؟',['التعديلات التي تمت ونتائج الاختبار وأي ملاحظات مسجلة','اسمه فقط','لون الماكينة','عدد الأدوات','موعد خروجه']],
+['teamwork','عند تقسيم مهمة صيانة كبيرة، ما الأفضل؟',['توزيع الأدوار ونقاط التسليم والتأكد من التواصل','عمل الجميع على نفس الجزء','عدم مشاركة المعلومات','العمل بدون خطة','تغيير المسؤوليات عشوائياً']],
+['readiness','طُلب منك فحص ماكينة جديدة، ما أفضل بداية؟',['قراءة الدليل والمواصفات وإجراءات السلامة ثم الفحص','التشغيل بأقصى حمل','فتحها عشوائياً','تجاهل الدليل','نسخ إعدادات جهاز آخر']],
+['readiness','كيف تطوّر نفسك كفني صيانة؟',['تتعلم تقنيات التشخيص وتوثيق الأعطال والمعدات الجديدة','تتوقف عن التعلم','تعتمد على الحفظ فقط','تتجنب التدريب','ترفض التقنيات الحديثة']],
+['readiness','إذا لم تكن متأكداً من سبب العطل، ما السلوك المهني؟',['تصرّح بعدم اليقين وتستكمل الفحص المنهجي أو تطلب دعماً','تدّعي المعرفة','تخفي المشكلة','تستبدل كل شيء','تغادر دون إبلاغ']],
+['tech','لماذا يعد قياس الاهتزاز مفيداً؟',['قد يكشف مشكلات في المحامل أو المحاذاة أو الاتزان','لتغيير لون الشاشة','لزيادة سرعة الماكينة','لرفع ضغط الزيت دائماً','لإيقاف كل الصيانة']],
+['tech','متى تستخدم الصيانة الوقائية؟',['وفق خطة وساعات تشغيل أو حالة المعدات قبل العطل','فقط بعد العطل','بعد توقف المصنع','عشوائياً','مرة في العمر']],
+['safety','ما الغرض من إجراءات العزل ووضع بطاقة تحذير؟',['منع إعادة تشغيل المعدة أثناء أعمال الصيانة','زيادة الإنتاج','تسهيل السرعة','تقليل عدد الفنيين','تغيير نوع الزيت']],
+['readiness','اكتشفت إجراءً غير واضح في دليل ماكينة، ماذا تفعل؟',['تتحقق من المصدر المعتمد وتسأل المختص قبل التنفيذ','تخمن','تسأل شخصاً عشوائياً','تتجاهله','تنفذه بأقصى سرعة']],
+['teamwork','بعد إتمام الصيانة، ماذا يجب توثيقه؟',['العطل والسبب والإجراء والقطع والاختبارات والملاحظات','وقت الغداء','اسم العامل فقط','لون القطعة فقط','لا شيء']],
+],
+'عامل لحام':[
+['tech','ما الهدف من ضبط تيار ماكينة اللحام؟',['الحصول على قوس مستقر واختراق مناسب حسب العملية والخامة','تغيير لون المعدن','زيادة الضوضاء','تسخين المكان','تقليل وزن الماكينة']],
+['tech','لماذا يجب تنظيف سطح المعدن قبل اللحام؟',['لتقليل الشوائب وتحسين جودة وصلة اللحام','لزيادة الغبار','لتغيير اللون','لتسريع التبريد فقط','لمنع رؤية الوصلة']],
+['tech','ما فائدة زاوية الإلكترود أو مسدس اللحام الصحيحة؟',['تساعد في التحكم في شكل وحوض اللحام والاختراق','لزيادة طول السلك فقط','لتقليل الإضاءة','لرفع وزن القطعة','لا فائدة']],
+['tech','إذا ظهرت مسامية في اللحام، ما الذي تراجعه؟',['النظافة والحماية الغازية والإعدادات وطريقة التنفيذ','لون الملابس','ارتفاع الطاولة','عدد العمال','صوت الماكينة']],
+['tech','لماذا تُجهّز الفجوة والحافة قبل بعض الوصلات؟',['لتحقيق اختراق وشكل وصلة مناسبين حسب التصميم','لتزيين القطعة','لتقليل وزنها فقط','لرفع الضوضاء','لزيادة الغبار']],
+['tech','ما أهمية اختيار القطب أو سلك اللحام المناسب؟',['لمطابقة نوع المعدن والعملية والمواصفات المطلوبة','لأن لونه أفضل','لأنه أرخص فقط','لأنه أطول دائماً','لأنه أثقل']],
+['tech','عند ملاحظة تشوه حراري في قطعة، ماذا تفعل؟',['تراجع توزيع الحرارة وتسلسل اللحام والتثبيت وفق الإجراء','تسخنها أكثر','تطرقها عشوائياً','تتركها','تزيد التيار بلا حساب']],
+['tech','ما فائدة اختبار أو فحص وصلة اللحام بعد التنفيذ؟',['التأكد من جودة الوصلة واكتشاف العيوب قبل الاستخدام','تغيير اللون','زيادة وزن القطعة','تسريع العمل','إلغاء التوثيق']],
+['tech','كيف تتعامل مع عيب متكرر في نفس الوصلة؟',['تحلل السبب الجذري وتراجع الإعدادات وطريقة التحضير','تخفي العيب','تعيد اللحام بلا فحص','تلوم المعدن فقط','تتركه']],
+['tech','لماذا تقرأ WPS أو تعليمات اللحام المعتمدة؟',['لتحديد العملية والمعلمات والمواد المطلوبة للوصلة','لملء الوقت','لتحديد لون المكان','لإلغاء فحص الجودة','لاستخدامها كصورة']],
+['safety','ما أهم حماية للعين والوجه أثناء اللحام؟',['قناع أو خوذة لحام مناسبة مع معدات الوقاية المطلوبة','نظارة شمسية عادية فقط','قبعة قماش','لا شيء','كمامة فقط']],
+['safety','ما الخطر الرئيسي من الشرر قرب مواد قابلة للاشتعال؟',['نشوب حريق، لذلك يجب إبعادها وتأمين مكان العمل','تحسين التهوية','زيادة الإنتاج','تبريد المعدن','لا خطر']],
+['safety','عند استخدام أسطوانة غاز للحام، ماذا يجب مراعاته؟',['تثبيتها وتخزينها واستخدامها وفق إجراءات السلامة المناسبة','وضعها بجانب اللهب','دحرجتها على الأرض','فتح الصمام عشوائياً','تعريضها للحرارة']],
+['safety','ماذا تفعل إذا كان شفاط الدخان لا يعمل؟',['توقف أو تؤمّن التهوية وتبلغ المسؤول قبل الاستمرار','تكمل والباب مغلق','تقف أقرب للدخان','تشعل مروحة صغيرة عشوائياً','تتجاهل الأمر']],
+['safety','لماذا تفحص الكابلات وملقط اللحام؟',['لمنع مخاطر كهربائية وسوء التوصيل قبل العمل','لتغيير اللون','لتزيد الشرر','لزيادة الوزن','لا فائدة']],
+['teamwork','فني تجهيز القطعة أخبرك أن المقاس تغير، ماذا تفعل؟',['تراجع معه التغيير وتحدث إعداداتك وفق الرسم أو التعليمات','تتجاهله','تلحّم كما كان','تلومه','تخفي التغيير']],
+['teamwork','في لحام قطعة كبيرة مع فريق، ما الأفضل؟',['تحديد ترتيب الخطوات ونقاط التثبيت والفحص بين الأفراد','كل شخص يعمل عشوائياً','عدم مشاركة القياسات','العمل دون خطة','تغيير الأدوار بلا إبلاغ']],
+['teamwork','لاحظ مراقب الجودة عيباً في وصلة نفذتها، ماذا تفعل؟',['تراجع الملاحظة وتصحح السبب وفق الإجراء','تجادله فوراً','تخفي العيب','تلوم المادة','ترفض إعادة الفحص']],
+['readiness','طُلب منك لحام مادة لم تتعامل معها سابقاً، ماذا تفعل؟',['تراجع الإجراء والمواصفة وتطلب التوجيه قبل البدء','تجرّب مباشرة','تزيد التيار','تقلد أي إعداد','ترفض التعلم']],
+['readiness','عند ضغط الإنتاج، ما الذي لا يجب التضحية به؟',['السلامة وجودة الوصلة ومتطلبات الفحص','كل شيء لصالح السرعة','التوثيق فقط','الوقت فقط','التنسيق فقط']],
+['readiness','ماذا تفعل إذا شككت أن الإعدادات غير مناسبة؟',['توقف وتتحقق من المواصفة أو WPS قبل التنفيذ','تستخدمها كما هي','تضاعف التيار','تخفي الشك','تسأل شخصاً عشوائياً']],
+['tech','لماذا تستخدم عملية تنظيف الخبث بين بعض التمريرات؟',['لضمان تلامس ونظافة مناسبة بين الطبقات','لتغيير لون المعدن','لتقليل الضوء','لزيادة الوزن','لإلغاء الفحص']],
+['tech','ما أهمية تثبيت القطع قبل اللحام؟',['تقليل الحركة والتشوه والحفاظ على الأبعاد','رفع درجة الحرارة','زيادة الشرر','إلغاء القياس','لا أهمية']],
+['safety','إذا ظهرت نار صغيرة بسبب الشرر في منطقة غير مؤمنة، ماذا تفعل؟',['توقف العمل واتبع إجراء الطوارئ واستخدم الوسيلة المناسبة إذا كان الوضع آمناً','تستمر في اللحام','تصور النار','تفتح الغاز','تخفي الأمر']],
+['readiness','لماذا تسجل نوع المادة والإعدادات والنتائج عند الحاجة؟',['للتتبع وتحسين الجودة وإعادة نفس النتيجة عند اللزوم','لزيادة الورق فقط','لاستخدامها في الديكور','لإلغاء المسؤولية','لا فائدة']],
+],
+'فني تبريد وتكييف':[
+['tech','ما وظيفة الضاغط في دورة التبريد؟',['ضغط وسيط التبريد ودفعه خلال الدورة','تنقية الهواء الداخلي','قياس الرطوبة فقط','تسخين الغرفة دائماً','تخزين الكهرباء']],
+['tech','إذا كان فلتر الهواء مسدوداً، ما الأثر المحتمل؟',['ضعف تدفق الهواء وانخفاض كفاءة التبريد','زيادة التدفق','انخفاض استهلاك الكهرباء دائماً','زيادة ضغط الهواء فقط','لا أثر']],
+['tech','لماذا يتم فحص تسرب وسيط التبريد؟',['لمنع فقد الشحنة وتحسين الأداء والسلامة البيئية وفق الإجراء','لزيادة الضوضاء','لخفض وزن الوحدة','لتغيير لون الأنابيب','لرفع سرعة المروحة']],
+['tech','ما أهمية تنظيف المكثف؟',['تحسين تبادل الحرارة والحفاظ على كفاءة التشغيل','زيادة الغبار','خفض سرعة المروحة','رفع حرارة المكان','تقليل حجم الضاغط']],
+['tech','إذا كانت الوحدة لا تبرد جيداً، ماذا تفحص أولاً؟',['الفلتر وتدفق الهواء والإعدادات والأعراض قبل استنتاج السبب','تضيف وسيط تبريد مباشرة','تغير الضاغط فوراً','تغلق الوحدة نهائياً','تزيد الجهد']],
+['tech','لماذا يُراجع العزل الحراري للأنابيب؟',['لتقليل انتقال الحرارة والتكاثف غير المرغوب','لتغيير الصوت','لزيادة وزن المواسير','لإيقاف المروحة','لا فائدة']],
+['tech','ما الهدف من فحص المروحة؟',['التأكد من دورانها وتدفق الهواء وحالتها الميكانيكية والكهربائية','تغيير لون الشفرات','زيادة وزنها','إلغاء تنظيف الفلتر','لا أهمية']],
+['tech','عند قياس ضغوط النظام، ما الأهم؟',['استخدام أجهزة مناسبة وقراءة القيم ضمن سياق التشغيل والمواصفة','اختيار أعلى رقم','الاعتماد على التخمين','قياس دون توصيل صحيح','تغيير الإعدادات أولاً']],
+['tech','ما فائدة اختبار التصريف؟',['التأكد من خروج مياه التكثف ومنع التسربات أو الانسدادات','زيادة التبريد مباشرة','رفع ضغط الغاز','تغيير لون الخرطوم','تقليل الكهرباء']],
+['tech','كيف تتعامل مع عطل متكرر في الوحدة؟',['تبحث عن السبب الجذري بدل تبديل القطع عشوائياً','تضيف غازاً كل مرة','تتجاهل البلاغ','تغير المروحة دائماً','توقف التوثيق']],
+['safety','عند العمل على دائرة كهربائية لوحدة تكييف، ماذا تفعل؟',['تفصل مصدر الطاقة وتتبع إجراء العزل قبل الفحص','تعمل وهي موصلة','تلمس الأطراف','ترش ماء','تزيد الفولت']],
+['safety','كيف تتعامل مع وسيط تبريد حسب تعليمات الموقع؟',['تستخدم معدات وإجراءات الحماية والتهوية والتعامل المعتمد','تفرغه في الهواء عمداً','تسخن الأسطوانة','تخلطه عشوائياً','تشمّه مباشرة']],
+['safety','إذا كان هناك تسرب مياه قريب من لوحة كهربائية، ماذا تفعل؟',['تعزل مصدر الخطر قبل التعامل مع الكهرباء','تستمر بالعمل','تستخدم يد مبللة','تغطي اللوحة فقط','تتجاهل التسرب']],
+['safety','لماذا يجب تثبيت أسطوانة الغاز أو أدوات الخدمة؟',['لمنع السقوط أو التلف أثناء العمل','لتغيير اللون','لزيادة الضغط','لتقليل التهوية','لا سبب']],
+['safety','ما أهمية استخدام أدوات الخدمة المناسبة؟',['تقليل أخطاء القياس وتحسين سلامة العمل','لزيادة الضوضاء','لإظهار الخبرة فقط','لتسريع أي عملية دون فحص','لا أهمية']],
+['teamwork','كيف تسلم وحدة بعد الصيانة لفني آخر؟',['تشرح ما تم فحصه وأي قطع أو إعدادات وأي ملاحظات','تتركها دون تقرير','تقول إنها جاهزة فقط','تخفي العيوب','تزيل الملصقات']],
+['teamwork','فني الكهرباء لاحظ مشكلة في تغذية الوحدة، ماذا تفعل؟',['تنسق معه قبل متابعة الجانب الميكانيكي','تعمل منفرداً','تلومه','تفصل كل شيء دون إبلاغ','تجاهل ملاحظته']],
+['teamwork','عند تركيب وحدة مع فريق، ما الأفضل؟',['تحديد مسؤولية كل شخص وخطوات الاختبار والتسليم','كل شخص ينفذ ما يريد','بدون قياسات','بدون فحص','بدون تواصل']],
+['readiness','طُلب منك صيانة نظام جديد غير مألوف، ما أول خطوة؟',['مراجعة الدليل والمواصفات وإجراء السلامة ثم طلب التوجيه عند الحاجة','فتح الوحدة عشوائياً','إضافة غاز مباشرة','تغيير الضاغط','رفض المهمة بلا سبب']],
+['readiness','في موسم ضغط العمل، كيف تحافظ على الجودة؟',['تنظم الأولويات وتلتزم بخطوات الفحص ولا تتجاوز السلامة','تتخطى الاختبارات','تسرع بشكل عشوائي','تتجاهل البلاغات','تغلق كل الوحدات']],
+['readiness','إذا كانت قراءة جهاز الخدمة غير منطقية، ماذا تفعل؟',['تراجع الجهاز والتوصيل وطريقة القياس قبل القرار','تخترع قراءة أخرى','تضيف غازاً','تلغي الفحص','تغادر']],
+['tech','لماذا تنظف ملفات المكثف والمبخر حسب خطة الصيانة؟',['للحفاظ على انتقال حرارة وتدفق هواء مناسبين','لتغيير الصوت','لزيادة الرطوبة','لرفع وزن الوحدة','لا فائدة']],
+['tech','ما فائدة فحص التوصيلات الكهربائية للوحدة؟',['اكتشاف ارتخاء أو تلف قد يؤثر على التشغيل والسلامة','تغيير لون الكابلات','تقليل حجم الوحدة','زيادة الضوضاء','لا أثر']],
+['safety','إذا لاحظت رائحة احتراق في الوحدة، ماذا تفعل؟',['توقف التشغيل وتفصل الطاقة بطريقة آمنة وتبلغ المسؤول','تزيد السرعة','تفتح اللوحة وهي موصلة','ترش ماء','تتجاهلها']],
+['readiness','لماذا توثق الأعطال والإصلاحات في أنظمة التكييف؟',['للتتبع وتحسين التشخيص وخطة الصيانة القادمة','لتجميل التقرير','لزيادة عدد الأوراق','لاستخدامها كإعلان','لا فائدة']],
+],
+'فني ميكانيكا':[
+['tech','ما أهمية استخدام مفتاح العزم في بعض أعمال الميكانيكا؟',['شد المسامير وفق العزم المحدد في المواصفة','إزالة الصدأ فقط','زيادة سرعة الماكينة','قياس الحرارة','تلميع القطعة']],
+['tech','إذا ظهر صوت غير طبيعي من محمل، ماذا تفعل؟',['تفحص المحمل والتشحيم والمحاذاة والحمل وفق الإجراء','تزيد السرعة','تطرق المحمل','تتجاهل الصوت','تضع زيتاً عشوائياً']],
+['tech','لماذا يتم فحص مستوى الزيت وحالته؟',['للتأكد من التزييت المناسب وتقليل التآكل والحرارة','لزيادة الوزن','لتغيير اللون','لرفع الجهد','لتقليل النظافة']],
+['tech','ما وظيفة الحزام في بعض أنظمة النقل؟',['نقل القدرة بين الأجزاء والمحافظة على التشغيل حسب التصميم','زيادة حرارة المكان','تبريد المحرك','تخزين الكهرباء','قياس السرعة فقط']],
+['tech','إذا كان الحزام مرتخياً أكثر من المطلوب، ما المشكلة المحتملة؟',['انزلاق وضعف نقل القدرة وتآكل غير طبيعي','زيادة الكفاءة دائماً','انخفاض الصوت فقط','لا مشكلة','زيادة وزن الماكينة']],
+['tech','لماذا تُفحص الخلوصات في بعض المكونات؟',['لضمان الحركة والأداء ضمن الحدود المطلوبة ومنع الاحتكاك غير الصحيح','لتغيير اللون','لزيادة الضوضاء','لتقليل عدد المسامير','لا فائدة']],
+['tech','عند تركيب رولمان بلي جديد، ما المهم؟',['طريقة التركيب الصحيحة والمحاذاة وعدم إتلافه','طرقه بقوة مباشرة','استخدام أي اتجاه','تجاهل النظافة','اختيار لون مختلف']],
+['tech','ما أفضل طريقة لتحديد سبب عطل ميكانيكي؟',['جمع الأعراض والقياسات وفحص المكونات بشكل منهجي','تغيير كل القطع','التخمين','رفع السرعة','إخفاء الأعراض']],
+['tech','لماذا يجب الحفاظ على نظافة الأجزاء الدقيقة؟',['لمنع دخول شوائب قد تسرّع التآكل أو تعيق الحركة','لتغيير اللون','لزيادة الوزن','لتقليل السلامة','لا سبب']],
+['tech','بعد إصلاح مجموعة ميكانيكية، ماذا تفعل؟',['تجري اختباراً مناسباً وتراجع التسريب والضوضاء والمحاذاة والتثبيت','تشغلها بأقصى حمل فوراً','تغادر قبل الاختبار','تخفي النتيجة','تغير كل القطع']],
+['safety','قبل صيانة ماكينة ميكانيكية، ماذا يجب؟',['عزل مصادر الطاقة ومنع الحركة غير المقصودة','الاقتراب أثناء التشغيل','إزالة الحواجز','رفع السرعة','ترك المفتاح في وضع التشغيل']],
+['safety','ماذا تفعل عند سقوط زيت أو شحم على الأرض؟',['تؤمن المكان وتنظفه وفق الإجراء لمنع الانزلاق','تتركه','ترش ماء فقط','تغطيه بورق','تزيد الحركة']],
+['safety','عند رفع جزء ثقيل، ما الأهم؟',['اختيار وسيلة رفع مناسبة والتأكد من الوزن والتثبيت والمسار الآمن','رفعه يدوياً مهما كان الوزن','سحبه على الأرض','الوقوف تحته','تجاهل الحمولة']],
+['safety','لماذا لا تستخدم أداة تالفة؟',['لأنها قد تسبب انزلاقاً أو كسر الأداة أو إصابة','لأنها قديمة فقط','لأن لونها مختلف','لأنها أبطأ فقط','لا سبب']],
+['safety','إذا كان واقي ماكينة مفقوداً، ما التصرف الصحيح؟',['إيقاف الاستخدام وإبلاغ المسؤول حتى تُستعاد الحماية المطلوبة','تشغيلها بحذر','إبعاد الحاجز فقط','زيادة السرعة','تجاهل الأمر']],
+['teamwork','زميلك أكمل مرحلة من الصيانة قبلك، ماذا تراجع معه؟',['ما تم عمله والقطع والقياسات والملاحظات قبل الاستكمال','اسمه فقط','وقت العمل فقط','لون القطعة','لا شيء']],
+['teamwork','حدث خلاف حول سبب صوت في مجموعة ميكانيكية، ماذا تفعل؟',['تجمع القياسات وتراجع المخطط وتناقش الأدلة بهدوء','ترفع صوتك','تغيّر القطعة فوراً','تلوم زميلك','تترك المهمة']],
+['teamwork','كيف تنسق اختبار ماكينة بعد الصيانة؟',['تحدد خطوات الاختبار والمسؤوليات ونقاط الإيقاف بوضوح','تشغلها بدون إبلاغ','يختبر كل شخص شيئاً مختلفاً','لا توثق','تترك المشغل وحده']],
+['readiness','إذا واجهت نظام ميكانيكي لم تتعامل معه من قبل، ماذا تفعل؟',['تراجع الدليل والمخططات وتطلب التوجيه قبل العمل','تجرب عشوائياً','تفككه كله','تدّعي المعرفة','ترفض التعلم']],
+['readiness','ما السلوك الصحيح عند ضغط الوقت؟',['ترتب العمل وتحافظ على السلامة والجودة ولا تتجاوز الاختبارات الضرورية','تتخطى الفحص','تسرع بلا خطة','تخفي الأخطاء','تترك المهمة دون إبلاغ']],
+['readiness','إذا فشل الإصلاح الأول، ماذا تفعل؟',['تعيد تقييم السبب الجذري والبيانات بدلاً من تبديل قطع عشوائياً','تكرر نفس الخطوة بلا تغيير','تلوم المشغل','تترك الماكينة','تخفي العطل']],
+['tech','ما فائدة المحاذاة الصحيحة للأعمدة؟',['تقليل الاهتزاز والأحمال الجانبية وإطالة عمر المكونات','زيادة الضوضاء','رفع وزن العمود','تغيير لون المعدن','لا فائدة']],
+['tech','لماذا يتم فحص التسربات في الأنظمة الميكانيكية؟',['لحماية الأداء ومنع فقد السوائل أو تلوث المكان حسب النظام','لتغيير درجة اللون','لزيادة الحمل','لا سبب','لإلغاء الصيانة']],
+['safety','إذا لاحظت اهتزازاً خطراً أثناء التشغيل، ماذا تفعل؟',['توقف وفق الإجراء وتمنع استمرار التشغيل حتى يتم الفحص','تقف بجوار الماكينة','تزيد السرعة','تضغط على الهيكل','تتجاهل الأمر']],
+['readiness','لماذا توثق الصيانة والقطع المستخدمة؟',['لتتبع حالة المعدة وتسهيل الصيانة المستقبلية وتحليل الأعطال','لزيادة الورق','لتغيير شكل التقرير','لاستخدامها كإعلان','لا فائدة']],
+]};
+
+function resolveProfessionKey(name){
+  const raw=String(name||'').trim();
+  if(!raw)return '';
+  if(PROFESSION_BANKS[raw])return raw;
+  const keys=Object.keys(PROFESSION_BANKS);
+  return keys.find(k=>raw.includes(k)||k.includes(raw))||'';
+}
+function buildQuiz(){
+  const profession=document.getElementById('professionInput')?.value||getCurrentProfile()?.profession||'';
+  const key=resolveProfessionKey(profession);
+  const bank=PROFESSION_BANKS[key]||PROFESSION_BANKS['فني صيانة'];
+  if(!String(profession).trim()){showToast('اكتب المهنة في الملف الشخصي أولاً ثم احفظ البيانات ⚠️');return false}
+  const selected=bank.map(([cat,q,opts])=>({cat,q,options:shuffle([...opts].map((text,i)=>({text,correct:i===0}))),answered:false}));
+  quiz=shuffle(selected);qi=0;catStats={};Object.keys(CATS).forEach(c=>catStats[c]={correct:0,total:0});quiz.forEach(x=>catStats[x.cat].total++);testRunning=true;renderQuestion();navigate('simulator');return true
+}
+function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+function resetQuizState(){return buildQuiz()}
+function renderQuestion(){const next=document.getElementById('nextQuestion');if(!testRunning){document.getElementById('question').textContent='اضغط «بدء الاختبار / إعادة المحاولة» بعد حفظ مهنتك';document.getElementById('answers').innerHTML='';next.style.display='none';return}const x=quiz[qi];document.getElementById('question').textContent=`السؤال ${qi+1}: ${x.q}`;document.getElementById('quizProgressText').textContent=`السؤال ${qi+1} من 25`;document.getElementById('quizProgressBar').style.width=Math.round((qi+1)/25*100)+'%';document.getElementById('quizCatBadge').textContent=`${CATS[x.cat].icon} ${CATS[x.cat].label}`;document.getElementById('answers').innerHTML=x.options.map((o,i)=>`<button class="answer" data-i="${i}">${esc(o.text)}</button>`).join('');next.style.display='inline-block';next.textContent=qi<24?'التالي':'إنهاء الاختبار ✅';}
+document.getElementById('answers').addEventListener('click',e=>{const b=e.target.closest('.answer');if(!b||!testRunning)return;const x=quiz[qi];if(x.answered)return;document.querySelectorAll('.answer').forEach(z=>z.disabled=true);const idx=+b.dataset.i;if(x.options[idx].correct){catStats[x.cat].correct++;b.style.borderColor='var(--green)';b.style.background='#e9f8ef'}else{b.style.borderColor='var(--red)';b.style.background='#fff0f0';const good=document.querySelector(`.answer[data-i="${x.options.findIndex(o=>o.correct)}"]`);if(good){good.style.borderColor='var(--green)';good.style.background='#e9f8ef'}}x.answered=true;});
+document.getElementById('nextQuestion').onclick=()=>{if(!quiz[qi]?.answered)return showToast('اختر إجابة أولاً ⚠️');if(qi<24){qi++;renderQuestion()}else finishQuiz()};
+document.getElementById('startTest').onclick=()=>{if(buildQuiz())showToast('بدأ اختبار جديد: 25 سؤالاً بخمس اختيارات 🔄')};
+document.getElementById('viewCertificate').onclick=()=>navigate('results');
+
+function finishQuiz(){const catPct={};Object.keys(CATS).forEach(c=>{const s=catStats[c];catPct[c]=s.total?Math.round(s.correct/s.total*100):0});const overall=Math.round(catPct.tech*.35+catPct.safety*.30+catPct.readiness*.20+catPct.teamwork*.15);let topCat=Object.keys(CATS)[0],weakCat=Object.keys(CATS)[0];Object.keys(CATS).forEach(c=>{if(catPct[c]>catPct[topCat])topCat=c;if(catPct[c]<catPct[weakCat])weakCat=c});lastResults={cats:catPct,overall,topCat,weakCat,profession:getCurrentProfile()?.profession||document.getElementById('professionInput')?.value||'',date:new Date().toISOString()};testRunning=false;state.session={role:selectedRole,name:currentUserName,phone:currentUserPhone,email:currentUserEmail,lastResults};const wk=getCurrentProfile();if(wk){wk.lastResults=lastResults;wk.testHistory=wk.testHistory||[];wk.testHistory.unshift(lastResults);state.workers[profileKey(currentUserPhone)]=wk;}saveState();document.getElementById('scoreCircle').textContent=overall+'%';document.getElementById('scoreText').textContent=`مستوى: ${overall>=80?'مرتفع جداً':overall>=60?'مرتفع':overall>=40?'متوسط':'تحتاج إلى تطوير'}`;renderResults();renderAI();updateStats();showToast('اكتمل الاختبار ✅');navigate('results')}
+function renderResults(){const p=document.getElementById('resultsPanel');if(!lastResults){p.innerHTML='<div style="text-align:center;padding:25px;color:var(--muted)">لم يتم إجراء اختبار المهارات بعد.</div>';return}p.innerHTML=`<div class="result" style="background:var(--mini-stat-bg)"><strong>المهنة المختبرة</strong><span>${esc(lastResults.profession||'غير محددة')}</span></div>`+Object.keys(CATS).map(c=>`<div class="result"><strong>${CATS[c].icon} ${CATS[c].label}</strong><span style="float:left">${lastResults.cats[c]}%</span><div class="progress"><span style="width:${lastResults.cats[c]}%;background:${CATS[c].color}"></span></div></div>`).join('')+`<div class="result" style="background:var(--input-bg)"><strong>📈 التقييم العام</strong><span style="float:left">${lastResults.overall}%</span><div class="progress"><span style="width:${lastResults.overall}%"></span></div><div style="margin-top:12px"><button class="primary-btn" id="resultRetakeBtn">إعادة الاختبار 🔄</button></div></div>`;document.getElementById('resultRetakeBtn').onclick=()=>{if(buildQuiz())showToast('تمت إعادة الاختبار 🔄')}}
+function renderAI(){const p=document.getElementById('aiPanel');if(!lastResults){p.innerHTML='<div style="text-align:center;padding:25px;color:var(--muted)">أكمل الاختبار أولاً لتفعيل التحليل.</div>';return}const level=lastResults.overall>=80?'مرتفعة جداً':lastResults.overall>=60?'مرتفعة':lastResults.overall>=40?'متوسطة':'تحتاج إلى تطوير';const plan=developmentPlan(lastResults);p.innerHTML=`<h3>التقييم المتوقع</h3><div style="padding:18px;border:1px solid var(--border);border-radius:9px"><strong>مدى ملاءمتك لوظيفة ${esc(lastResults.profession||'الفنية')}</strong><p style="margin-top:7px;color:var(--primary);font-weight:800">${level} — ${lastResults.overall}%</p><div class="progress"><span style="width:${lastResults.overall}%"></span></div></div><p style="color:var(--muted);font-size:12px;line-height:1.9;margin-top:15px">🤖 أبرز نقاط قوتك: <b>${CATS[lastResults.topCat].label}</b> — وأهم محور يحتاج إلى تطوير: <b>${CATS[lastResults.weakCat].label}</b>.</p><div class="dev-box" style="margin-top:14px"><div class="dev-col"><h4>نقاط القوة</h4>${plan.strengths.map(x=>`<p>• ${esc(x)}</p>`).join('')}</div><div class="dev-col"><h4>التدريب المقترح لرفع السعر في السوق</h4>${plan.courses.map(x=>`<p>• ${esc(x)}</p>`).join('')}</div></div>`}
+document.getElementById('aiBtn').onclick=()=>{if(!lastResults)return showToast('أكمل الاختبار أولاً ⚠️');renderAI();showToast('تم تحديث التحليل 🤖')};
+
+/* ---------- Auth / profile ---------- */
+function selectRole(r){selectedRole=r;document.querySelectorAll('.role-btn').forEach(b=>b.classList.toggle('active',b.dataset.role===r));const info=document.getElementById('adminLoginInfo');if(info)info.style.display=r==='ادمن'?'block':'none';const label=document.querySelector('#authForm label');if(label)label.textContent=r==='ادمن'?'اسم صاحب الموقع': 'الاسم بالكامل / اسم الشركة';const mw=document.getElementById('authMessengerWrap');if(mw)mw.style.display=r==='ادمن'?'none':'grid';toggleRoleUI()}
+document.querySelectorAll('.role-btn').forEach(b=>b.addEventListener('click',()=>selectRole(b.dataset.role)));
+document.getElementById('authPhone').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,11)});
+document.getElementById('authForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ let n=document.getElementById('authName').value.trim(),p=document.getElementById('authPhone').value.trim(),m=(document.getElementById('authMessenger')?.value||'').trim();
+ if(!n)return showToast('اكتب الاسم أولاً ⚠️');
+ if(!/^\d{11}$/.test(p))return showToast('رقم الهاتف يجب أن يتكون من 11 رقم ⚠️');
+ if(selectedRole!=='ادمن'&&!m)return showToast('اكتب حساب أو رقم المراسل ⚠️');
+ if(selectedRole==='ادمن'&&p!==OWNER_PHONE)return showToast('رقم صاحب الموقع غير مصرح به ❌');
+ if(selectedRole==='ادمن'){n=OWNER_NAME;p=OWNER_PHONE;m=''}
+ currentUserName=n;currentUserPhone=p;currentUserEmail='';currentUserMessenger=m;state.session={role:selectedRole,name:n,phone:p,email:'',messenger:m,lastResults:null};lastResults=null;
+ let newWorker=false,newCompany=false;
+ if(selectedRole==='عامل'){const key=profileKey(p);newWorker=!state.workers[key];if(newWorker)state.workers[key]={name:n,phone:p,email:'',messenger:m,createdAt:new Date().toISOString()};else state.workers[key]={...state.workers[key],name:n,phone:p,messenger:m||state.workers[key].messenger||''};const w=state.workers[key];currentUserName=w.name||n;currentUserEmail=w.email||'';currentUserMessenger=w.messenger||m;lastResults=w.lastResults||null}
+ if(selectedRole==='صاحب شركة'){const key=profileKey(p);newCompany=!state.companies[key];state.companies[key]={...(state.companies[key]||{}),name:n,phone:p,messenger:m,createdAt:state.companies[key]?.createdAt||new Date().toISOString()};}
+ saveState();
+ if(newWorker)notifyAdmin('👷 موظف جديد سجل في المنصة',`تمت إضافة موظف جديد: ${currentUserName} — ${currentUserPhone}`);
+ if(newCompany)notifyAdmin('🏢 شركة جديدة سجلت في المنصة',`تمت إضافة شركة جديدة: ${currentUserName} — ${currentUserPhone}`);
+ document.getElementById('authModal').style.display='none';updateHeader();toggleRoleUI();renderApplications();renderCompanies();renderNotifications();renderMessages();updateStats();
+ if(selectedRole==='ادمن'){showToast(`أهلاً وسهلاً بك يا صاحب الموقع ${OWNER_NAME} 👋🛡️`);navigate('dashboard')}else{showToast(`مرحباً ${currentUserName} 👋`)};
+});
+function fillProfile(p){document.getElementById('nameInput').value=p.name||currentUserName;document.getElementById('phoneInput').value=p.phone||currentUserPhone;const mes=document.getElementById('messengerInput');if(mes)mes.value=p.messenger||currentUserMessenger||'';document.getElementById('emailInput').value=p.email||'';document.getElementById('govInput').value=p.gov||'';document.getElementById('professionInput').value=p.profession||'';const otherEl=document.getElementById('otherProfessionsInput');if(otherEl)otherEl.value=p.otherProfessions||'';document.getElementById('experienceInput').value=p.experience??'';document.getElementById('bioInput').value=p.bio||'';const sk=document.getElementById('skillsInput');if(sk)sk.value=p.skills||'';updateProfilePercent(p)}
+let viewingPassportPhone='';
+function workerByPhone(phone){return state.workers[profileKey(phone)]||null}
+function parseSkills(s){return String(s||'').split(/[،,|\n]+/).map(x=>x.trim()).filter(Boolean)}
+function passportScore(w){
+  if(!w)return 0;
+  let n=0;
+  if(w.profession)n++;
+  if(w.experience!==''&&w.experience!=null)n++;
+  if(parseSkills(w.skills).length)n++;
+  if((w.previousWorks||[]).length)n++;
+  if(w.lastResults||w.testHistory?.length)n++;
+  if(w.bio)n++;
+  return Math.round(n/6*100);
+}
+function renderWorksPreview(list){
+  const box=document.getElementById('worksPreview');if(!box)return;
+  box.innerHTML=list.length?list.map((w,i)=>`<div class="work-item"><b>${esc(w.title)}</b> — ${esc(w.place||'')} ${esc(w.year||'')}<br>${esc(w.note||'')}<button class="small-btn gray" data-del-work="${i}" style="margin-top:6px">حذف</button></div>`).join(''):'<div style="color:var(--muted);font-size:12px">لا توجد أعمال سابقة بعد.</div>';
+}
+function currentWorks(){
+  const w=getCurrentProfile();
+  return (w&&Array.isArray(w.previousWorks))?w.previousWorks:[];
+}
+function developmentPlan(res){
+  if(!res||!res.cats)return {strengths:['أكمل الاختبار لبناء خطة تطوير موثّقة.'],gaps:['لا توجد فجوة مقاسة بعد.'],courses:['ابدأ اختبار المهارات أولاً.']};
+  const order=Object.keys(CATS).sort((a,b)=>(res.cats[b]||0)-(res.cats[a]||0));
+  const strengths=order.filter(k=>(res.cats[k]||0)>=60).map(k=>`${CATS[k].label} (${res.cats[k]}%)`);
+  const gaps=order.filter(k=>(res.cats[k]||0)<60).map(k=>`${CATS[k].label} (${res.cats[k]}%)`);
+  const courseMap={tech:'تدريب عملي على التشخيص وقراءة المخططات',safety:'دورة سلامة مهنية وإجراءات العزل',teamwork:'تدريب عمل جماعي وتوثيق المهام',readiness:'تدريب انضباط تشغيلي وجودة تسليم'};
+  const courses=order.filter(k=>(res.cats[k]||0)<70).map(k=>courseMap[k]);
+  return {
+    strengths:strengths.length?strengths:['مستوى مبدئي تحت التطوير'],
+    gaps:gaps.length?gaps:['لا توجد فجوة حرجة حالياً'],
+    courses:courses.length?courses:['المحافظة على المستوى الحالي وتوثيق الأعمال']
+  };
+}
+function developmentBox(res){
+  const d=developmentPlan(res);
+  return `<div class="passport-box dev-box">
+    <div class="dev-col"><h4>نقاط القوة</h4>${d.strengths.map(x=>`<p>• ${esc(x)}</p>`).join('')}</div>
+    <div class="dev-col"><h4>يحتاج تدريب</h4>${d.gaps.map(x=>`<p>• ${esc(x)}</p>`).join('')}${d.courses.map(x=>`<span class="skill-chip">${esc(x)}</span>`).join('')}</div>
+  </div>`;
+}
+function shortageAnalysis(){
+  const workers=Object.values(state.workers||{});
+  const jobs=state.jobs||[];
+  const demand={};
+  jobs.forEach(j=>{const k=String(j.title||'').trim()||'غير محدد';demand[k]=(demand[k]||0)+1});
+  (state.applications||[]).forEach(a=>{const k=String(a.job||a.workerProfession||'').trim();if(k)demand[k]=(demand[k]||0)+0});
+  const supply={};
+  workers.forEach(w=>{
+    const names=[w.profession,w.otherProfessions].filter(Boolean).join(' ');
+    const key=String(w.profession||'غير محددة').trim();
+    supply[key]=(supply[key]||0)+1;
+    Object.keys(demand).forEach(d=>{if(names.includes(d)||d.includes(key))supply[d]=(supply[d]||supply[key]||0)});
+  });
+  const rows=Object.keys(demand).map(k=>{
+    const need=demand[k];
+    const have=workers.filter(w=>`${w.profession||''} ${w.otherProfessions||''} ${w.skills||''}`.includes(k)||k.includes(w.profession||'--')).length;
+    return {name:k,need,have,gap:need-have};
+  }).sort((a,b)=>b.gap-a.gap);
+  if(!rows.length){
+    const top=Object.entries(workers.reduce((m,w)=>{const k=w.profession||'غير محددة';m[k]=(m[k]||0)+1;return m},{})).sort((a,b)=>a[1]-b[1]);
+    return top.slice(0,3).map(([name,have])=>({name,need:0,have,gap:have<=1?-1:0,note:have<=1?'تخصص نادر قد يسبب تعثر إنتاج':'التخصص متوفر حالياً'}));
+  }
+  return rows.slice(0,6);
+}
+function renderShortageBoard(){
+  const box=document.getElementById('shortageBoard');if(!box)return;
+  const rows=shortageAnalysis();
+  if(!rows.length){box.innerHTML='<div class="insight-card"><span>التنبؤ الاستباقي</span><strong>لا توجد فجوة ظاهرة</strong><p>عند زيادة الوظائف والعمال ستظهر تخصصات النقص تلقائياً.</p></div>';return;}
+  box.innerHTML=rows.map(r=>{
+    const danger=r.gap>0||r.have<=1;
+    return `<div class="insight-card ${danger?'warn':'ok'}"><span>${danger?'خطر تعثر إنتاج':'وضع مستقر'}</span><strong>${esc(r.name)}</strong><p>المتاح: ${r.have} عامل · المطلوب/الطلب: ${r.need||'غير محدد'}<br>${esc(r.note|| (r.gap>0?'نقص في التخصص. يفضّل الإعلان أو التدريب.':'التخصص يكفي الطلب الحالي.'))}</p></div>`;
+  }).join('');
+}
+function passportHTML(w){
+  if(!w)return '<div class="card" style="text-align:center;padding:24px;color:var(--muted)">لا يوجد جواز مهارة بعد.</div>';
+  const skills=parseSkills(w.skills);
+  const works=w.previousWorks||[];
+  const res=w.lastResults||(w.testHistory||[])[0]||null;
+  const tests=w.testHistory||(res?[res]:[]);
+  const apps=(state.applications||[]).filter(a=>a.workerPhone===w.phone);
+  const score=passportScore(w);
+  const level=score>=80?'موثّق بدرجة عالية':score>=50?'موثّق جزئيًا':'يحتاج استكمال';
+  return `<div class="passport-doc">
+    <div class="passport-top">
+      <div><small>SKILL PASSPORT</small><h3>جواز المهارة — ${esc(w.name||'عامل')}</h3><p>${esc(w.profession||'المهنة غير محددة')}${w.otherProfessions?' · '+esc(w.otherProfessions):''}<br>📍 ${esc(w.gov||'غير محددة')} · 📞 ${esc(w.phone||'')} · خبرة ${esc(w.experience??'غير محددة')} سنوات</p></div>
+      <div class="passport-id"><span>اكتمال الملف</span><b>${score}%</b><small>${level}</small></div>
+    </div>
+    <div class="passport-grid">
+      <div class="passport-box"><h4>المهنة والمهارات</h4><p>${esc(w.bio||'لا توجد نبذة مهنية بعد.')}</p><div style="margin-top:8px">${skills.length?skills.map(s=>`<span class="skill-chip">${esc(s)}</span>`).join(''):'<span class="skill-chip">لم تُضف مهارات بعد</span>'}</div></div>
+      <div class="passport-box"><h4>الاختبارات والتقييمات</h4>${res?`<p>آخر اختبار: <b>${res.overall}%</b> — ${esc(res.profession||'')}</p><div class="passport-meter"><span style="width:${res.overall}%"></span></div>${Object.keys(CATS).map(c=>`<p>${CATS[c].icon} ${CATS[c].label}: ${res.cats?.[c]??0}%</p>`).join('')}<p>عدد الاختبارات المسجلة: ${tests.length}</p>`:'<p>لم يتم إجراء اختبار بعد.</p>'}</div>
+      <div class="passport-box"><h4>الأعمال السابقة</h4>${works.length?works.map(x=>`<div class="work-item"><b>${esc(x.title)}</b><br>${esc(x.place||'')} · ${esc(x.year||'')}<br>${esc(x.note||'')}</div>`).join(''):'<p>لا توجد أعمال سابقة مسجلة.</p>'}</div>
+      <div class="passport-box"><h4>سجل التوظيف</h4>${apps.length?apps.slice(0,6).map(a=>`<div class="work-item">${esc(a.job)} — ${esc(a.company)}<br>الحالة: ${esc(a.status)}</div>`).join(''):'<p>لا توجد طلبات توظيف مرتبطة بعد.</p>'}</div>
+      ${developmentBox(res)}
+    </div>
+  </div>`;
+}
+function renderPassport(phone){
+  const dir=document.getElementById('passportDirectory');
+  const view=document.getElementById('passportView');
+  const editor=document.getElementById('passportEditor');
+  if(!view)return;
+  if(selectedRole==='صاحب شركة'){
+    if(editor)editor.classList.add('hidden');
+    const list=Object.values(state.workers||{});
+    if(dir){
+      dir.classList.remove('hidden');
+      dir.innerHTML=`<div class="card" style="margin-bottom:16px"><h3 style="margin-bottom:10px">ملفات جواز المهارة</h3>${list.length?list.map(w=>`<div class="candidate-card"><div class="candidate-head"><strong>${esc(w.name||'عامل')}</strong><span class="status">${passportScore(w)}%</span></div><div class="candidate-meta">${esc(w.profession||'غير محددة')} · ${esc(w.phone||'')}</div><div class="app-actions"><button class="small-btn viewPassport" data-phone="${esc(w.phone||'')}">عرض الجواز</button><button class="small-btn contactWorker" data-phone="${esc(w.phone||'')}">التواصل</button></div></div>`).join(''):'<p style="color:var(--muted)">لا يوجد عمال بعد.</p>'}</div>`;
+    }
+    const target=phone||viewingPassportPhone;
+    const w=target?workerByPhone(target):null;
+    view.innerHTML=w?passportHTML(w):'<div class="card" style="text-align:center;padding:22px;color:var(--muted)">اختر عاملاً لعرض جواز المهارة الموثّق.</div>';
+    return;
+  }
+  if(dir)dir.classList.add('hidden');
+  if(editor)editor.classList.toggle('hidden',selectedRole!=='عامل');
+  const w=getCurrentProfile();
+  if(document.getElementById('skillsInput'))document.getElementById('skillsInput').value=w?.skills||'';
+  renderWorksPreview(w?.previousWorks||[]);
+  view.innerHTML=passportHTML(w);
+}
+document.getElementById('addWorkBtn').onclick=()=>{
+  if(selectedRole!=='عامل')return showToast('إضافة الأعمال متاحة للعامل فقط ⚠️');
+  const title=document.getElementById('workTitleInput').value.trim();
+  const place=document.getElementById('workPlaceInput').value.trim();
+  const year=document.getElementById('workYearInput').value.trim();
+  const note=document.getElementById('workNoteInput').value.trim();
+  if(!title)return showToast('اكتب اسم العمل السابق ⚠️');
+  const key=profileKey(currentUserPhone);
+  state.workers[key]=state.workers[key]||{name:currentUserName,phone:currentUserPhone};
+  state.workers[key].previousWorks=state.workers[key].previousWorks||[];
+  state.workers[key].previousWorks.unshift({title,place,year,note});
+  ['workTitleInput','workPlaceInput','workYearInput','workNoteInput'].forEach(id=>document.getElementById(id).value='');
+  saveState();renderWorksPreview(state.workers[key].previousWorks);renderPassport();showToast('تمت إضافة العمل السابق ✅');
+};
+document.getElementById('savePassportBtn').onclick=()=>{
+  if(selectedRole!=='عامل')return showToast('حفظ الجواز متاح للعامل فقط ⚠️');
+  const key=profileKey(currentUserPhone);
+  state.workers[key]=state.workers[key]||{name:currentUserName,phone:currentUserPhone};
+  state.workers[key].skills=(document.getElementById('skillsInput')?.value||'').trim();
+  saveState();renderPassport();showToast('تم حفظ جواز المهارة ✅');
+};
+document.addEventListener('click',e=>{
+  const del=e.target.closest('[data-del-work]');
+  if(del&&selectedRole==='عامل'){
+    const w=getCurrentProfile();if(!w)return;
+    w.previousWorks.splice(+del.dataset.delWork,1);
+    state.workers[profileKey(currentUserPhone)]=w;saveState();renderPassport();
+  }
+  const vp=e.target.closest('.viewPassport');
+  if(vp){viewingPassportPhone=vp.dataset.phone||'';navigate('passport');renderPassport(viewingPassportPhone);}
+});
+function updateProfilePercent(p){const ids=['nameInput','phoneInput','emailInput','govInput','professionInput','experienceInput','bioInput'];let n=0;ids.forEach(id=>{if(String(document.getElementById(id)?.value||'').trim())n++});const pct=Math.round(n/ids.length*100);document.getElementById('profilePercent').textContent=pct+'%';document.getElementById('profileCircle').style.background=`conic-gradient(var(--primary) ${pct}%,#e8eef5 0)`;}
+document.getElementById('saveProfile').onclick=()=>{const p={name:document.getElementById('nameInput').value.trim(),phone:document.getElementById('phoneInput').value.trim(),messenger:(document.getElementById('messengerInput')?.value||'').trim(),email:document.getElementById('emailInput').value.trim(),gov:document.getElementById('govInput').value.trim(),profession:document.getElementById('professionInput').value.trim(),otherProfessions:(document.getElementById('otherProfessionsInput')?.value||'').trim(),experience:document.getElementById('experienceInput').value,bio:document.getElementById('bioInput').value.trim(),lastResults};if(!p.name||!/^\d{11}$/.test(p.phone)||!p.email||!p.gov||!p.profession||p.experience===''||!p.bio)return showToast('أكمل كل بيانات الملف الشخصي أولاً ⚠️');currentUserName=p.name;currentUserPhone=p.phone;currentUserEmail=p.email;currentUserMessenger=p.messenger;state.workers[profileKey(p.phone)]={...(state.workers[profileKey(p.phone)]||{}),...p};state.session={role:selectedRole==='ادمن'?'ادمن':'عامل',name:p.name,phone:p.phone,email:p.email,messenger:p.messenger,lastResults};saveState();updateHeader();updateProfilePercent(p);renderApplications();renderCompanies();if(selectedRole==='ادمن')renderAdminDashboard();showToast('تم حفظ الملف. أصبح ملفك متاحاً للشركات ✅')};
+function updateHeader(){const isAdmin=selectedRole==='ادمن';document.getElementById('topWelcome').innerHTML=isAdmin?`أهلاً وسهلاً بك يا صاحب الموقع 👋<small>لوحة تحكم الإدارة — ${OWNER_NAME}</small>`:currentUserName?`مرحباً، ${esc(currentUserName)} 👋<small>${esc(selectedRole)}</small>`:'مرحباً 👋<small>ابدأ بتسجيل الدخول لاستخدام المنصة</small>';document.getElementById('topName').textContent=isAdmin?OWNER_NAME:currentUserName||'زائر';document.getElementById('topRole').textContent=isAdmin?'صاحب الموقع / ادمن':selectedRole||'غير مسجل';document.getElementById('topAvatar').textContent=isAdmin?'🛡️':selectedRole==='عامل'?'👷':selectedRole==='صاحب شركة'?'🏢':'👤'}
+function toggleRoleUI(){const company=selectedRole==='صاحب شركة';const worker=selectedRole==='عامل';const admin=selectedRole==='ادمن';document.getElementById('workerSearchSection').style.display=company||admin?'none':'block';document.getElementById('companyRecruitmentSection').style.display=company?'block':'none';
+const cps=document.getElementById('companyProfileSection');
+if(cps){cps.style.display=company?'block':'none';
+if(company){const co=state.companies[profileKey(currentUserPhone)]||{};document.getElementById('companyNameEdit').value=co.name||currentUserName||'';document.getElementById('companyPhoneEdit').value=co.phone||currentUserPhone||'';document.getElementById('companyMessengerEdit').value=co.messenger||currentUserMessenger||'';}}document.getElementById('jobsTitle').textContent=company?'توظيف ونشر فرصة عمل':admin?'إدارة الوظائف':'الوظائف';const qjs=document.getElementById('quickJobService');if(qjs)qjs.textContent=company?'إضافة فرصة عمل':'البحث عن وظيفة';const services=document.getElementById('quickServicesWrap');const companyAd=document.getElementById('companyAdHome');if(services)services.classList.toggle('hidden',company||admin);if(companyAd)companyAd.classList.toggle('hidden',!company);const workerHome=document.getElementById('workerHomeBlocks');const adminDash=document.getElementById('adminAnalytics');if(workerHome)workerHome.classList.toggle('hidden',admin);if(adminDash)adminDash.classList.toggle('hidden',!admin);if(admin)renderAdminDashboard();document.querySelectorAll('.admin-only').forEach(el=>el.classList.toggle('show-admin',admin));document.querySelectorAll('.admin-only-page').forEach(el=>el.classList.toggle('show-admin',admin));document.querySelectorAll('.hide-for-admin, .hide-for-company').forEach(el=>{const hide=(admin&&el.classList.contains('hide-for-admin'))||(company&&el.classList.contains('hide-for-company'));el.style.display=hide?'none':'';});document.getElementById('adminWelcome')?.classList.toggle('show',admin);
+const wAnn=document.getElementById('workerAnnouncePanel');
+const cAnn=document.getElementById('companyAnnouncePanel');
+const aTitle=document.getElementById('announceTitle');
+const aDesc=document.getElementById('announceDesc');
+if(wAnn)wAnn.style.display=company?'none':'grid';
+if(cAnn)cAnn.style.display=company?'block':'none';
+if(aTitle)aTitle.textContent=company?'إعلان الشركة على الموقع':'اعلان هنا';
+if(aDesc)aDesc.textContent=company?'اطلب إعلانًا لشركتك داخل المنصة. سيظهر الطلب للأدمن مع رقم الشركة.':'تواصل مع صاحب الموقع عند الحاجة.';
+if(company){const adn=document.getElementById('adCompanyName');const adp=document.getElementById('adPhone');if(adn)adn.value=currentUserName||'';if(adp)adp.value=currentUserPhone||'';}
+const appTitle=document.getElementById('applicationsTitle');
+const appDesc=document.getElementById('applicationsDesc');
+if(appTitle)appTitle.textContent=company?'طلبات التوظيف — العمال المسجلون':'طلبات التوظيف';
+if(appDesc)appDesc.textContent=company?'ابحث بالتخصص ثم افتح جواز المهارة أو تواصل.':'تابع الطلبات التي قدمتها أو وصلت إلى شركتك.';
+const talentCard=document.getElementById('talentSearchCard');
+if(talentCard)talentCard.style.display=company?'block':'none';
+const passEd=document.getElementById('passportEditor');
+if(passEd)passEd.classList.toggle('hidden',!worker);
+if(admin){renderAdminWorkers();renderAdminCompanies();renderAdRequests();updateAdminNotificationBadge();updateAdminBadges();}}
+
+/* ---------- Jobs ---------- */
+function renderJobs(list=state.jobs){const c=document.getElementById('jobsList');if(selectedRole==='صاحب شركة'){c.innerHTML='<div style="text-align:center;padding:18px;color:var(--muted)">أنت الآن في وضع الشركة. استخدم نموذج إضافة فرصة العمل أسفل الصفحة.</div>';return}if(!list.length){c.innerHTML='<div class="card job-empty" style="text-align:center;padding:25px;color:var(--muted);font-size:13px">لا توجد وظائف منشورة حالياً.<br>ستظهر الوظائف بمجرد نشرها.</div>';return}c.innerHTML=list.map((j,i)=>`<div class="card job-card"><div><h3>${esc(j.title)}</h3><p>🏢 ${esc(j.company)}<br>📍 ${esc(j.location||'مصر')}<br>⭐ الخبرة: ${esc(j.exp||'غير محددة')}<br>💰 المرتب: ${esc(j.salary||'حسب الاتفاق')}<br>📞 ${esc(j.phone||j.companyPhone||'غير متوفر')}</p></div><div class="actions"><button class="small-btn apply" data-id="${esc(j.id)}">التقديم</button><button class="small-btn gray details" data-id="${esc(j.id)}">التفاصيل</button></div></div>`).join('')}
+function renderHomeJobs(){const c=document.getElementById('homeJobsList');c.innerHTML=state.jobs.length?state.jobs.slice(0,4).map(j=>`<div style="padding:12px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><div><b>${esc(j.title)}</b><div style="font-size:10px;color:var(--muted)">${esc(j.company)} · ${esc(j.salary||'غير محدد')}</div></div><span class="status">جديدة</span></div>`).join(''):'<div style="text-align:center;padding:22px;color:var(--muted);font-size:12px">لا توجد وظائف منشورة حالياً.</div>'}
+function updateStats(){document.getElementById('statJobs').textContent=state.jobs.length;document.getElementById('statCompanies').textContent=Object.keys(state.companies).length;document.getElementById('statApplications').textContent=state.applications.length;document.getElementById('statScore').textContent=lastResults?lastResults.overall+'%':'0%';if(selectedRole==='ادمن')renderAdminDashboard();}
+function dayKey(d){const x=new Date(d);if(isNaN(x))return '';return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')}
+function drawMixChart(values,colors){
+  const canvas=document.getElementById('mixChart');if(!canvas)return;
+  const ctx=canvas.getContext('2d');const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);
+  const total=values.reduce((a,b)=>a+b,0);const cx=w/2,cy=h/2,r=78;
+  if(!total){ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#1e334b';ctx.lineWidth=22;ctx.stroke();return}
+  let start=-Math.PI/2;
+  values.forEach((v,i)=>{const sl=v/total*Math.PI*2;ctx.beginPath();ctx.arc(cx,cy,r,start,start+sl);ctx.strokeStyle=colors[i];ctx.lineWidth=22;ctx.lineCap='butt';ctx.stroke();start+=sl});
+}
+function renderAdminDashboard(){
+  const workers=Object.values(state.workers||{});
+  const companies=Object.values(state.companies||{});
+  const ads=state.adRequests||[];
+  const apps=state.applications||[];
+  const complete=workers.filter(profileComplete).length;
+  const unreadAds=ads.filter(a=>!a.read).length;
+  const setTxt=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  setTxt('kpiWorkers',workers.length);
+  setTxt('kpiCompanies',companies.length);
+  setTxt('kpiAds',ads.length);
+  setTxt('kpiApps',apps.length);
+  setTxt('kpiWorkersMeta',workers.length?`${complete} أكملوا الملف · ${workers.length-complete} لم يكتمل`:'لا يوجد عمال بعد');
+  setTxt('kpiCompaniesMeta',companies.length?`${state.jobs.length} وظيفة منشورة`:'لا توجد شركات بعد');
+  setTxt('kpiAdsMeta',ads.length?`${unreadAds} غير مقروء · ${ads.length-unreadAds} مقروء`:'لا توجد إعلانات بعد');
+  setTxt('kpiAppsMeta',apps.length?`${apps.filter(a=>a.status==='مقبول').length} مقبول · ${apps.filter(a=>a.status==='مرفوض').length} مرفوض`:'لا توجد طلبات بعد');
+  const mix=[workers.length,companies.length,ads.length];
+  const colors=['#4aa3ea','#3dce7d','#f6b04a'];
+  drawMixChart(mix,colors);
+  const legend=document.getElementById('mixLegend');
+  if(legend)legend.innerHTML=[['العمال',mix[0],colors[0]],['الشركات',mix[1],colors[1]],['الإعلانات',mix[2],colors[2]]].map(([n,v,c])=>`<div class="legend-row"><i class="legend-dot" style="background:${c}"></i><span>${n}</span><b>${v}</b></div>`).join('');
+  const profCount={};
+  workers.forEach(w=>{const p=String(w.profession||'').trim()||'غير محددة';profCount[p]=(profCount[p]||0)+1});
+  const profs=Object.entries(profCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxProf=Math.max(1,...profs.map(x=>x[1]));
+  const pBox=document.getElementById('professionChart');
+  const cols=['#4aa3ea','#3dce7d','#b08eec','#f6b04a','#f07a7a','#93a4b8','#22a559','#2f6feb'];
+  if(pBox)pBox.innerHTML=profs.length?profs.map(([p,v],i)=>`<div class="bar-row"><span>${esc(p)}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(v/maxProf*100)}%;background:${cols[i%cols.length]}"></div></div><b>${v}</b></div>`).join(''):'<div style="color:var(--muted);font-size:12px;text-align:center;padding:18px">لا توجد مهن مسجلة بعد.</div>';
+  const adParts=[{n:'إعلانات مكتوبة',v:ads.filter(a=>a.source==='form').length,c:'#4aa3ea'},{n:'طلبات اتصال',v:ads.filter(a=>a.source==='contact').length,c:'#3dce7d'},{n:'غير مقروء',v:unreadAds,c:'#f6b04a'},{n:'مقروء',v:ads.filter(a=>a.read).length,c:'#93a4b8'}];
+  const maxAd=Math.max(1,...adParts.map(x=>x.v));
+  const aBox=document.getElementById('adsChart');
+  if(aBox)aBox.innerHTML=adParts.map(x=>`<div class="bar-row"><span>${x.n}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(x.v/maxAd*100)}%;background:${x.c}"></div></div><b>${x.v}</b></div>`).join('');
+  const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));d.setHours(0,0,0,0);return d});
+  const counts=days.map(d=>{
+    const k=dayKey(d);
+    return workers.filter(w=>dayKey(w.createdAt)===k).length+companies.filter(c=>dayKey(c.createdAt)===k).length+ads.filter(a=>dayKey(a.date)===k).length;
+  });
+  const maxW=Math.max(1,...counts);
+  const wBox=document.getElementById('weekChart');
+  if(wBox)wBox.innerHTML=days.map((d,i)=>`<div class="week-col"><b>${counts[i]}</b><div class="week-bar" style="height:${Math.max(8,Math.round(counts[i]/maxW*120))}px"></div><span>${d.toLocaleDateString('ar-EG',{weekday:'short'})}</span></div>`).join('');
+  renderShortageBoard();
+}
+document.getElementById('searchBtn').onclick=()=>{const q=document.getElementById('jobSearch').value.trim().toLowerCase();renderJobs(q?state.jobs.filter(j=>(j.title+' '+j.company+' '+(j.exp||'')).toLowerCase().includes(q)):state.jobs);showToast(q?`نتائج البحث: ${state.jobs.filter(j=>(j.title+' '+j.company+' '+(j.exp||'')).toLowerCase().includes(q)).length}`:'عرض كل الوظائف')};
+document.getElementById('talentSearchBtn')?.addEventListener('click',()=>{renderApplications();showToast('تم تصفية العمال حسب التخصص ✅')});
+document.getElementById('talentSearch')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();renderApplications()}});
+document.getElementById('saveCompanyProfileBtn')?.addEventListener('click',()=>{
+  if(selectedRole!=='صاحب شركة')return;
+  const name=document.getElementById('companyNameEdit').value.trim();
+  const phone=document.getElementById('companyPhoneEdit').value.trim();
+  const messenger=document.getElementById('companyMessengerEdit').value.trim();
+  if(!name||!/^\d{11}$/.test(phone)||!messenger)return showToast('أكمل اسم الشركة والهاتف والمراسل ⚠️');
+  currentUserName=name;currentUserPhone=phone;currentUserMessenger=messenger;
+  state.companies[profileKey(phone)]={...(state.companies[profileKey(phone)]||state.companies[profileKey(currentUserPhone)]||{}),name,phone,messenger,createdAt:(state.companies[profileKey(phone)]||{}).createdAt||new Date().toISOString()};
+  state.session={role:'صاحب شركة',name,phone,email:currentUserEmail,messenger,lastResults};
+  saveState();updateHeader();renderCompanies();showToast('تم حفظ بيانات الشركة ✅');
+});
+document.getElementById('publishJobBtn').onclick=()=>{if(selectedRole!=='صاحب شركة')return showToast('هذه الميزة لصاحب الشركة فقط');const req=document.getElementById('postReq').value.trim(),exp=document.getElementById('postExp').value.trim(),salary=document.getElementById('postSalary').value.trim(),phone=document.getElementById('postPhone').value.trim();if(!req||!exp||!salary||!phone)return showToast('أكمل بيانات الوظيفة أولاً ⚠️');const j={id:'JOB-'+Date.now().toString(36),title:req,company:currentUserName,companyPhone:currentUserPhone,location:'كفر الشيخ، مصر',exp,salary,phone,createdAt:new Date().toISOString()};state.jobs.unshift(j);state.companies[profileKey(currentUserPhone)]={name:currentUserName,phone:currentUserPhone};['postReq','postExp','postSalary','postPhone'].forEach(id=>document.getElementById(id).value='');saveState();renderJobs();renderHomeJobs();updateStats();showToast('تم نشر الوظيفة بنجاح ✅')};
+
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.apply');if(b){const j=state.jobs.find(x=>x.id===b.dataset.id);if(!j)return;const p=getCurrentProfile();if(selectedRole!=='عامل')return showToast('التقديم على الوظائف مخصص للعامل ⚠️');if(!p||!profileComplete(p))return showToast('أكمل وحفظ بيانات الملف الشخصي قبل التقديم ⚠️');if(state.applications.some(a=>a.jobId===j.id&&a.workerPhone===p.phone))return showToast('أنت قدمت على هذه الوظيفة بالفعل');const app={id:'APP-'+Date.now().toString(36),jobId:j.id,job:j.title,company:j.company,companyPhone:j.companyPhone,workerPhone:p.phone,workerName:p.name,workerEmail:p.email,workerGov:p.gov,workerProfession:p.profession,workerOtherProfessions:p.otherProfessions||'',workerMessenger:p.messenger||'',workerExperience:p.experience,workerBio:p.bio,score:lastResults?.overall||0,status:'قيد المراجعة',date:new Date().toISOString()};state.applications.unshift(app);pushNotification(j.companyPhone,'طلب توظيف جديد',`تقدّم ${p.name} على وظيفة ${j.title}.`);pushMessage(p.phone,j.companyPhone,p.name,`تقديم جديد: ${j.title}`,`بيانات العامل: ${p.name} — ${p.profession} — خبرة ${p.experience} سنوات — التقييم ${lastResults?.overall||0}%.`);saveState();renderApplications();updateStats();showToast('تم إرسال طلب التوظيف للشركة ✅')}
+ const d=e.target.closest('.details');if(d){const j=state.jobs.find(x=>x.id===d.dataset.id);if(j)showToast(`${j.title} — ${j.company} — خبرة ${j.exp} — ${j.salary}`)}
+ const accept=e.target.closest('.acceptApp');if(accept){updateApplicationStatus(accept.dataset.id,'مقبول')}
+ const reject=e.target.closest('.rejectApp');if(reject){updateApplicationStatus(reject.dataset.id,'مرفوض')}
+});
+
+/* ---------- Applications: worker + company */
+function renderApplications(){const p=document.getElementById('applicationsPanel');if(!p)return;if(selectedRole==='صاحب شركة'){const q=(document.getElementById('talentSearch')?.value||'').trim().toLowerCase();let candidates=Object.values(state.workers||{});if(q)candidates=candidates.filter(w=>`${w.profession||''} ${w.otherProfessions||''} ${w.skills||''} ${w.gov||''}`.toLowerCase().includes(q));const hint=document.getElementById('shortageHint');if(hint){const gap=shortageAnalysis().find(x=>q&&x.name.toLowerCase().includes(q));hint.innerHTML=q?`نتائج التخصص «${esc(q)}»: ${candidates.length} عامل.${gap&&gap.have<=1?' تنبيه: التخصص نادر وقد يسبب تعثر إنتاج.':''}`:'اكتب التخصص للوصول للعامل المناسب من جواز المهارة، مش من إعلان فقط.';}p.innerHTML=`<h3 style="font-size:14px;margin-bottom:12px">العمال حسب التخصص (${candidates.length})</h3>${candidates.length?candidates.map(w=>`<div class="candidate-card"><div class="candidate-head"><strong>${esc(w.name||'عامل')}</strong><span class="status">${passportScore(w)}%</span></div><div class="candidate-meta">المهنة / العمل: ${esc(w.profession||'غير محددة')}${w.otherProfessions?` · مهن أخرى: ${esc(w.otherProfessions)}`:''}<br>رقم الهاتف: ${esc(w.phone||'غير متوفر')} · المراسل: ${esc(w.messenger||'غير متوفر')}<br>المحافظة: ${esc(w.gov||'غير محددة')} · الخبرة: ${esc(w.experience??'غير محددة')}</div><div class="app-actions"><button class="small-btn viewPassport" data-phone="${esc(w.phone||'')}">جواز المهارة</button><button class="small-btn contactWorker" data-phone="${esc(w.phone||'')}">التواصل</button></div></div>`).join(''):'<div style="padding:20px;color:var(--muted);text-align:center">لا يوجد عمال مطابقون لهذا التخصص.</div>'}`;
+}else{const my=state.applications.filter(a=>a.workerPhone===currentUserPhone);p.innerHTML=my.length?my.map(a=>`<div class="candidate-card"><div class="candidate-head"><strong>${esc(a.job)}</strong><span class="status ${a.status==='مقبول'?'accepted':a.status==='مرفوض'?'rejected':''}">${esc(a.status)}</span></div><div class="candidate-meta">الشركة: ${esc(a.company)}<br>التقييم وقت التقديم: ${esc(a.score)}% · التاريخ: ${new Date(a.date).toLocaleDateString('ar-EG')}</div></div>`).join(''):'<div style="text-align:center;padding:25px;color:var(--muted)">لا توجد طلبات توظيف حالياً.<br>بعد التقديم ستظهر هنا فوراً.</div>'}}
+function updateApplicationStatus(id,status){const a=state.applications.find(x=>x.id===id);if(!a||a.companyPhone!==currentUserPhone)return; a.status=status;pushNotification(a.workerPhone,`تحديث طلب ${a.job}`,`الشركة ${a.company} قامت بتغيير حالة الطلب إلى: ${status}.`);pushMessage(currentUserPhone,a.workerPhone,currentUserName,`تحديث طلب التوظيف: ${a.job}`,`حالة طلبك الآن: ${status}.`);saveState();renderApplications();renderNotifications();showToast(`تم تحديث الطلب إلى ${status} ✅`)}
+
+/* ---------- Notifications / messages ---------- */
+function pushNotification(toPhone,title,body){state.notifications.unshift({id:'N-'+Date.now().toString(36),toPhone,title,body,date:new Date().toISOString(),read:false})}
+function pushMessage(fromPhone,toPhone,title,preview,detail){state.messages.unshift({id:'M-'+Date.now().toString(36),fromPhone,toPhone,title,preview,detail,date:new Date().toISOString()})}
+function renderNotifications(){const c=document.getElementById('notificationsList');if(!c)return;const list=selectedRole==='ادمن'?state.notifications.filter(n=>n.toPhone===currentUserPhone||n.toPhone===OWNER_PHONE||!n.toPhone):state.notifications.filter(n=>n.toPhone===currentUserPhone);document.getElementById('notificationDot').style.display=list.some(n=>!n.read)?'block':'none';c.innerHTML=list.length?list.map(n=>`<div class="card" style="margin-bottom:10px"><h3 style="font-size:13px">${esc(n.title)}</h3><p style="font-size:11px;color:var(--muted);margin-top:6px">${esc(n.body)}</p></div>`).join(''):'<div class="card" style="text-align:center;color:var(--muted)">لا توجد إشعارات حالياً.</div>'}
+let activeChatId=null;
+function chatIdFor(a,b){return [profileKey(a),profileKey(b)].sort().join('_')}
+function nameByPhone(phone){
+  const k=profileKey(phone);
+  if(k===profileKey(currentUserPhone))return currentUserName;
+  return state.workers[k]?.name||state.companies[k]?.name||phone;
+}
+function messengerContacts(){
+  if(selectedRole==='عامل')return Object.values(state.companies||{}).map(x=>({phone:x.phone,name:x.name,kind:'شركة'}));
+  if(selectedRole==='صاحب شركة')return Object.values(state.workers||{}).map(x=>({phone:x.phone,name:x.name,kind:'عامل'}));
+  if(selectedRole==='ادمن')return [
+    ...Object.values(state.workers||{}).map(x=>({phone:x.phone,name:x.name,kind:'عامل'})),
+    ...Object.values(state.companies||{}).map(x=>({phone:x.phone,name:x.name,kind:'شركة'}))
+  ];
+  return [];
+}
+function renderChatTargets(){
+  const sel=document.getElementById('chatTarget');if(!sel)return;
+  const list=messengerContacts();
+  sel.innerHTML=list.length?list.map(x=>`<option value="${esc(x.phone)}">${esc(x.name)} — ${x.kind}</option>`).join(''):'<option value="">لا يوجد حسابات متاحة الآن</option>';
+}
+function renderMessages(){
+  state.chats=state.chats||[];
+  renderChatTargets();
+  const box=document.getElementById('chatThreads');
+  if(!box)return;
+  const mine=selectedRole==='ادمن'?state.chats:state.chats.filter(c=>(c.participants||[]).includes(profileKey(currentUserPhone)));
+  box.innerHTML=mine.length?mine.map(c=>{
+    const other=(c.participants||[]).find(p=>p!==profileKey(currentUserPhone));
+    const last=(c.messages||[])[(c.messages||[]).length-1];
+    return `<div class="thread-item ${c.id===activeChatId?'active':''}" data-chat="${esc(c.id)}"><strong>${esc(nameByPhone(other))}</strong><span>${esc(last?.text||'بدون رسائل بعد')}</span></div>`;
+  }).join(''):'<div style="color:var(--muted);font-size:12px;text-align:center;padding:12px">لا توجد محادثات بعد. اختر شخصًا ثم اضغط بدء المراسلة.</div>';
+  renderChatThread();
+}
+function openChat(id){activeChatId=id;renderMessages()}
+function startChatWith(phone){
+  if(!phone)return showToast('لا يوجد حساب للبدء معه ⚠️');
+  const id=chatIdFor(currentUserPhone,phone);
+  state.chats=state.chats||[];
+  let chat=state.chats.find(c=>c.id===id);
+  if(!chat){
+    chat={id,participants:[profileKey(currentUserPhone),profileKey(phone)],messages:[]};
+    state.chats.unshift(chat);
+    saveState();
+  }
+  openChat(id);
+}
+function renderChatThread(){
+  const title=document.getElementById('chatTitle');
+  const body=document.getElementById('chatBody');
+  if(!title||!body)return;
+  const chat=(state.chats||[]).find(c=>c.id===activeChatId);
+  if(!chat){title.textContent='اختر محادثة';body.innerHTML='<div style="text-align:center;color:var(--muted);padding:30px 10px">لا توجد محادثة مفتوحة.</div>';return;}
+  const other=chat.participants.find(p=>p!==profileKey(currentUserPhone));
+  title.textContent='محادثة مع '+nameByPhone(other);
+  body.innerHTML=(chat.messages||[]).length?chat.messages.map(m=>`<div class="chat-bubble ${m.from===profileKey(currentUserPhone)?'me':'them'}">${esc(m.text)}<small>${new Date(m.date).toLocaleString('ar-EG')}</small></div>`).join(''):'<div style="text-align:center;color:var(--muted);padding:30px 10px">ابدأ بكتابة أول رسالة.</div>';
+  body.scrollTop=body.scrollHeight;
+}
+function sendChat(){
+  const input=document.getElementById('chatInput');
+  const text=(input?.value||'').trim();
+  if(!text)return showToast('اكتب رسالة أولاً ⚠️');
+  if(!activeChatId)return showToast('اختر محادثة أولاً ⚠️');
+  const chat=(state.chats||[]).find(c=>c.id===activeChatId);if(!chat)return;
+  chat.messages=chat.messages||[];
+  chat.messages.push({from:profileKey(currentUserPhone),text,date:new Date().toISOString()});
+  const other=chat.participants.find(p=>p!==profileKey(currentUserPhone));
+  pushNotification(other,'رسالة جديدة في المراسل',`${currentUserName}: ${text}`);
+  input.value='';
+  saveState();
+  renderMessages();
+  showToast('تم إرسال الرسالة ✅');
+}
+document.getElementById('startChatBtn').onclick=()=>startChatWith(document.getElementById('chatTarget').value);
+document.getElementById('sendChatBtn').onclick=sendChat;
+document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();sendChat()}});
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-chat]');if(t)openChat(t.dataset.chat);
+  const m=e.target.closest('.msgDetail');if(m)showToast(m.dataset.detail);
+  const cw=e.target.closest('.contactWorker');
+  if(cw){
+    if(selectedRole!=='صاحب شركة')return showToast('التواصل من هنا مخصص للشركة ⚠️');
+    const phone=cw.dataset.phone;
+    if(!phone)return showToast('لا يوجد رقم لهذا العامل ⚠️');
+    startChatWith(phone);
+    navigate('messages');
+    showToast('تم فتح المراسل مع العامل ✅');
+  }
+});
+
+function renderCompanies(){const c=document.getElementById('companiesList');const list=Object.values(state.companies);c.innerHTML=list.length?list.map(x=>`<div class="card" style="margin-bottom:10px"><strong>🏢 ${esc(x.name)}</strong><p style="font-size:11px;color:var(--muted);margin-top:6px">📞 ${esc(x.phone)}</p></div>`).join(''):'<div class="card" style="text-align:center;padding:25px;color:var(--muted)">لا توجد شركات مسجلة حالياً.</div>'}
+function renderAdminWorkers(){updateAdminBadges();const c=document.getElementById('adminWorkersList');if(!c)return;if(selectedRole!=='ادمن'){c.innerHTML='';return}const list=Object.values(state.workers);c.innerHTML=list.length?list.map(w=>`<div class="admin-card"><h4>👷 ${esc(w.name||'عامل بدون اسم')}</h4><p>📞 ${esc(w.phone||'غير متوفر')}<br>💼 المهنة الأساسية: ${esc(w.profession||'لم يحدد بعد')}<br>🛠️ مهن أخرى: ${esc(w.otherProfessions||'لا يوجد')}<br>📍 المحافظة: ${esc(w.gov||'لم تحدد')}<br>⭐ الخبرة: ${esc(w.experience??'غير محددة')}<br>📅 تاريخ الإضافة: ${w.createdAt?new Date(w.createdAt).toLocaleString('ar-EG'):'غير متوفر'}</p></div>`).join(''):'<div style="text-align:center;padding:25px;color:var(--muted)">لا يوجد موظفون مسجلون حتى الآن.</div>'}
+function renderAdminCompanies(){updateAdminBadges();const c=document.getElementById('adminCompaniesList');if(!c)return;if(selectedRole!=='ادمن'){c.innerHTML='';return}const list=Object.values(state.companies);c.innerHTML=list.length?list.map(x=>`<div class="admin-card"><h4>🏢 ${esc(x.name||'شركة بدون اسم')}</h4><p>📞 ${esc(x.phone||'غير متوفر')}<br>📅 تاريخ الإضافة: ${x.createdAt?new Date(x.createdAt).toLocaleString('ar-EG'):'غير متوفر'}</p></div>`).join(''):'<div style="text-align:center;padding:25px;color:var(--muted)">لا توجد شركات مسجلة حتى الآن.</div>'}
+function notifyAdmin(title,body){pushNotification(OWNER_PHONE,title,body);saveState();renderNotifications();updateAdminNotificationBadge();}
+function updateAdminBadges(){const wc=document.getElementById('workerCountBadge'),cc=document.getElementById('companyCountBadge'),ac=document.getElementById('adCountBadge');const set=(el,n)=>{if(!el)return;el.textContent=n;el.classList.toggle('show',n>0)};set(wc,Object.keys(state.workers||{}).length);set(cc,Object.keys(state.companies||{}).length);set(ac,(state.adRequests||[]).filter(x=>!x.read).length)}
+function updateAdminNotificationBadge(){const dot=document.getElementById('notificationDot');if(!dot)return;const unread=state.notifications.some(n=>n.toPhone===OWNER_PHONE&&!n.read);dot.style.display=unread?'block':'none'}
+function createAdRequest(source){
+  if(selectedRole==='صاحب شركة'||source==='site-ad'){
+    const name=(document.getElementById('adCompanyName')?.value||currentUserName||'').trim();
+    const phone=(document.getElementById('adPhone')?.value||currentUserPhone||'').trim();
+    const details=(document.getElementById('adBody')?.value||'').trim();
+    if(!name||!/^\d{11}$/.test(phone))return showToast('اكتب اسم الشركة ورقمها المكوّن من 11 رقم ⚠️');
+    const req={id:'AD-'+Date.now().toString(36),name,phone,role:'صاحب شركة',title:'هناك شركة تريد إعلان للموقع',body:details||'طلب إعلان للشركة على صفحات الموقع.',source:'site-ad',date:new Date().toISOString(),read:false};
+    state.adRequests=state.adRequests||[];state.adRequests.unshift(req);
+    notifyAdmin('📣 هناك شركة تريد إعلان للموقع',`الشركة: ${name} — رقم الشركة: ${phone}`);
+    renderAdRequests();updateAdminBadges();
+    return showToast('تم إرسال طلب إعلان الشركة للأدمن ✅');
+  }
+  const title=(document.getElementById('adTitle')?.value||'').trim();
+  const body=(document.getElementById('adBody')?.value||'').trim();
+  const phone=(document.getElementById('adPhone')?.value||currentUserPhone||'').trim();
+  if(source==='form'&&(!title||!body||!/^(\d{11})$/.test(phone)))return showToast('اكتب عنوان الإعلان والتفاصيل ورقم صحيح من 11 رقم ⚠️');
+  const req={id:'AD-'+Date.now().toString(36),name:currentUserName||'زائر',phone,role:selectedRole,title:title||'طلب تواصل من إعلان هنا',body:body||'قام المستخدم بالضغط على اتصل بنا من صفحة إعلان هنا.',source,date:new Date().toISOString(),read:false};
+  state.adRequests=state.adRequests||[];state.adRequests.unshift(req);
+  notifyAdmin(source==='contact'?'📞 طلب تواصل جديد من إعلان هنا':'📣 إعلان جديد يحتاج مراجعة',`${req.role} — ${req.name} — ${req.phone} — ${req.title}`);
+  renderAdRequests();showToast('تم إرسال إشعار للإدمن بنجاح ✅');
+}
+function renderAdRequests(){updateAdminBadges();const c=document.getElementById('adRequestsList');if(!c)return;if(selectedRole!=='ادمن'){c.innerHTML='';return}const list=state.adRequests||[];c.innerHTML=list.length?list.map(x=>`<div class="admin-card ${x.read?'':'unread-ad'}"><h4>${esc(x.source==='site-ad'?'📣 هناك شركة تريد إعلان للموقع':x.source==='contact'?'📞 طلب تواصل من إعلان هنا':'📣 '+x.title)}</h4><p>👤 ${esc(x.name)} · ${esc(x.role)}<br>📞 رقم الشركة / التواصل: ${esc(x.phone)}<br>📝 ${esc(x.body)}<br>🕒 ${new Date(x.date).toLocaleString('ar-EG')}</p><button class="small-btn" data-ad-read="${esc(x.id)}">${x.read?'تمت القراءة':'تحديد كمقروء'}</button></div>`).join(''):'<div style="text-align:center;padding:25px;color:var(--muted)">لا توجد إعلانات أو طلبات تواصل حتى الآن.</div>'}
+document.getElementById('sendAdBtn').onclick=()=>createAdRequest('form');document.getElementById('adContactBtn').onclick=()=>createAdRequest('contact');
+const homeAdCallBtn=document.getElementById('homeAdCallBtn');
+if(homeAdCallBtn)homeAdCallBtn.addEventListener('click',()=>createAdRequest('contact'));document.addEventListener('click',e=>{const b=e.target.closest('[data-ad-read]');if(b){const x=(state.adRequests||[]).find(a=>a.id===b.dataset.adRead);if(x){x.read=true;saveState();renderAdRequests();updateAdminNotificationBadge();updateAdminBadges();}}});
+
+document.getElementById('themeToggle').onclick=toggleTheme;
+document.getElementById('themeSettingsBtn').onclick=toggleTheme;
+document.getElementById('saveSettings').onclick=()=>showToast('تم حفظ الإعدادات ✅');
+document.getElementById('loadDemoBtn').onclick=()=>reloadDemoData();
+document.getElementById('logoutBtn').onclick=e=>{e.preventDefault();state.session=null;saveState();currentUserName='';currentUserPhone='';currentUserEmail='';lastResults=null;testRunning=false;document.getElementById('authModal').style.display='flex';updateHeader();showToast('تم تسجيل الخروج ✅')};
+
+/* initial boot */
+if(state.session){const s=state.session;selectedRole=s.role||'عامل';currentUserName=s.name||'';currentUserPhone=s.phone||'';currentUserEmail=s.email||'';currentUserMessenger=s.messenger||'';lastResults=s.lastResults||null;document.getElementById('authModal').style.display='none';if(selectedRole==='عامل'&&getCurrentProfile())fillProfile(getCurrentProfile());}
+else document.getElementById('authModal').style.display='flex';
+document.querySelectorAll('.role-btn').forEach(b=>b.classList.toggle('active',b.dataset.role===selectedRole));
+updateHeader();toggleRoleUI();renderJobs();renderHomeJobs();renderApplications();renderCompanies();renderNotifications();renderMessages();renderResults();renderAI();renderAdminWorkers();renderAdminCompanies();renderAdRequests();updateAdminBadges();updateStats();renderQuestion();
+applyTheme(currentTheme());
+</script>
+</body></html>
